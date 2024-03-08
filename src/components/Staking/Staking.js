@@ -25,17 +25,18 @@ const Staking = () => {
   const [progress, setProgress] = useState(false);
   const [curr, setCurr] = useState(0);
   const [name, setName] = useState("Yarmulke");
-  const [amount, setAmount] = useState(50);
+  // const [amount, setAmount] = useState(50);
   const [balanceShekel, setBalanceShekel] = useState(0);
   const [stakedPeriod, setStakedPeriod] = useState(0);
   const [stakedAmount, setStakedAmount] = useState(0);
+  const [shekelAmountForBuy, setShekelAmountForBuy] = useState(50);
 
   const { data, isError } = useBalance({
     address: address,
     token: "0x4DFbb247f9A7277c5c2F900d5e86a6Ceb98e0f63",
   });
 
-  console.log(data?.value, "balance!---------");
+  console.log(data?.formatted, "balance!---------");
 
   //=========== Contract Config================
   let contractConfig = {};
@@ -47,6 +48,13 @@ const Staking = () => {
   let erc20ContractConfig = {};
   erc20ContractConfig = {
     address: addressContract.addressJew,
+    abi: Erc20Json,
+  };
+
+  //===========stable token Contract Config================
+  let erc20ShekelContractConfig = {};
+  erc20ContractConfig = {
+    address: addressContract.addressShekel,
     abi: Erc20Json,
   };
 
@@ -98,6 +106,35 @@ const Staking = () => {
     isSuccess: approvedSuccess,
     isError: approvedError,
   } = useContractWrite(erc20ApproveContractConfig);
+
+  //=========== allowance Shekel Amount================
+  const { data: allownceShekelAmount } = useContractRead({
+    ...erc20ShekelContractConfig,
+    functionName: "allowance",
+    args: [address, addressContract.addressNFT],
+  });
+
+  //=============Approve shekel token===========
+  const {
+    config: shekelApproveContractConfig,
+    error: shekelApproveConfigError,
+    isError: isShekelContractConfigError,
+  } = usePrepareContractWrite({
+    ...erc20ShekelContractConfig,
+    functionName: "approve",
+    args: [
+      addressContract.addressNFT,
+      web3.utils.toNumber(web3.utils.toWei(shekelAmountForBuy, "ether")),
+    ],
+  });
+  const {
+    data: shekelApproveReturnData,
+    write: approveShekel,
+    error: ShekelApproveError,
+    isLoading: shekelLoading,
+    isSuccess: shekelSuccess,
+    isError: shekelError,
+  } = useContractWrite(shekelApproveContractConfig);
 
   //=============stake jewcoin===========
   const {
@@ -167,6 +204,26 @@ const Staking = () => {
     isError: ClaimError,
   } = useContractWrite(claimConfig);
 
+  //=============Buy NFT===========
+  const {
+    config: buyNFTConfig,
+    error: buyNFTConfigError,
+    isError: isBuyNFTConfigError,
+  } = usePrepareContractWrite({
+    ...contractConfig,
+    functionName: "buyNFT",
+    args: [web3.utils.toNumber(web3.utils.toWei(shekelAmountForBuy, "ether"))],
+  });
+
+  const {
+    data: buyNFTConfigData,
+    write: buyNFT,
+    error: BuyNFTConfigError,
+    isLoading: BuyNFTLoading,
+    isSuccess: BuyNFTSuccess,
+    isError: BuyNFTError,
+  } = useContractWrite(buyNFTConfig);
+
   const onStake = async () => {
     await stake();
     setStaking(1);
@@ -185,6 +242,14 @@ const Staking = () => {
 
   const onApprove = async () => {
     await approve();
+  };
+
+  const onApproveShekel = async () => {
+    await approveShekel();
+  };
+
+  const onBuyNFT = async () => {
+    await buyNFT();
   };
 
   const images = [
@@ -265,7 +330,7 @@ const Staking = () => {
 
   useEffect(() => {
     setName(images[curr].name);
-    setAmount(images[curr].amount);
+    setShekelAmountForBuy(images[curr].amount);
     // Clear the interval when the component unmounts
   }, [curr]);
 
@@ -307,7 +372,7 @@ const Staking = () => {
 
   useEffect(() => {
     if (data !== undefined) {
-      setBalanceShekel(formatUnits(Number(data?.value), 18));
+      setBalanceShekel(data?.formatted);
     } else setBalanceShekel(0);
   }, [data]);
 
@@ -553,7 +618,7 @@ const Staking = () => {
                     Amount
                   </div>
                   <div className="text-[13px] lg:text-[14px] text-[#fff] font-bold">
-                    {amount.toLocaleString()} Shekel
+                    {shekelAmountForBuy.toLocaleString()} Shekel
                   </div>
                 </div>
               </div>
@@ -564,7 +629,7 @@ const Staking = () => {
                 </div>
                 <div
                   className={`text-[12px] ${
-                    balanceShekel >= amount
+                    balanceShekel >= shekelAmountForBuy
                       ? "text-[#ffe300]"
                       : "text-[#ff3939]"
                   } font-bold`}
@@ -573,14 +638,29 @@ const Staking = () => {
                 </div>
               </div>
             </div>
-            {balanceShekel >= amount && isConnected ? (
-              <button className="h-[50px] w-full text-[white] text-[24px] font-bold bg-[#7659AD] rounded-[10px] h-[20%]">
-                Buy
-              </button>
+            {balanceShekel >= shekelAmountForBuy && isConnected ? (
+              allownceShekelAmount >
+              web3.utils.toNumber(
+                web3.utils.toWei(shekelAmountForBuy, "ether")
+              ) ? (
+                <button
+                  className="h-[50px] w-full text-[white] text-[24px] font-bold bg-[#7659AD] rounded-[10px] h-[20%]"
+                  onClick={onApproveShekel}
+                >
+                  Approve Shekel
+                </button>
+              ) : (
+                <button
+                  className="h-[50px] w-full text-[white] text-[24px] font-bold bg-[#7659AD] rounded-[10px] h-[20%]"
+                  onClick={onBuyNFT}
+                >
+                  Buy NFT
+                </button>
+              )
             ) : (
-              <div className="flex items-center justify-center text-center h-[50px] w-full text-[white] text-[24px] font-bold bg-[black] rounded-[10px]  h-[20%]">
-                <div className="text-[24px] font-bold">No Balance</div>
-              </div>
+              <button className="h-[50px] w-full text-[white] text-[24px] font-bold bg-[black] rounded-[10px] h-[20%]">
+                No Blance
+              </button>
             )}
           </div>
         </div>

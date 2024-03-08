@@ -131,9 +131,11 @@ const Introduction = () => {
     token: "0xE9959c7a1Cf7891Cac0bE4b2c835E723Db68a474",
   });
 
+  console.log(data?.formatted, "jewcon balance =-=-=-============");
+
   useEffect(() => {
     if (data !== undefined) {
-      setBalanceJew(formatUnits(Number(data?.value), 18));
+      setBalanceJew(data?.formatted);
     } else {
       setBalanceJew(0);
     }
@@ -234,6 +236,11 @@ const Introduction = () => {
   };
 
   const buyWithEth = async () => {
+    console.log(
+      web3.utils.toNumber(web3.utils.toWei(neededUSD, "ether")),
+      web3.utils.toNumber(web3.utils.toWei(tokenAmount, "ether")),
+      "sadfadgsdf"
+    );
     await buyTokenByETH();
   };
 
