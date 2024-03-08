@@ -1,0 +1,27 @@
+SEFER AH
+
+Sefer - Hebrew for 'letter' or 'book scroll', is a roman font made from elements of the Hebrew alphabet. Not an irregular or calligraphic imitation of Hebrew writing like similar faces (such as 'Shalom' or 'Moses'), but reminding of ordinary print letters.
+
+There is no distinction between upper- and lowercase, like in the Hebrew alphabet itself. The beginnings of 'Sefer AH' go back to the year 2000 when it was discussed extensively in the usenet group 'alt.binaries.fonts'.
+
+The 'H' follows a suggestion from Melissa Windsor. The German double s goes back to Fred Nader (aka 'apostrophe') who proposed it then. I refused to include it at that time, since there is no uppercase German double s. But now that the Unicode Consortium has meanwhile given the Uppercase Germandbls an Unicode number, I changed my mind and now (version 1.40, April 2013) let you make the choice as to whether to use it or not.
+
+Use
+---
+You may use this font software free of charge for personal and non-commercial use, including charity and non-profit projects, organisations as well as synagogues. Using this font to promote religious or ethnic hatred is illegal.
+
+Conversion and modification
+---------------------------
+You may convert this font to other formats including web font formats or modify it for your own purposes. You may use web font formats of this font to display text on your web pages, but you may not explicitly offer converted or modified versions of this font software for download or re-use by others, unless you have received permission in writing to do so.
+
+Distribution
+------------
+You may distribute this font on digital media or as a download on your website as long as you comply with the following rules. Violation of one or more of these rules terminates your distribution license and you have to stop distribution immediately:
+
+1. You may offer the font only in form of a ZIP file containing only the font software and this readme file. 
+2. You are not allowed to distribute the font software without this text file.
+3. You may not redistribute modified or converted copies of the font software (see above).
+4. You may not add advertising messages in text or graphics form to the zip file.
+5. You are not allowed to create a self-extracting executable file containing the font software or require the user 6. to run or install a download manager or other software to get the download.
+7. You may not charge money for the download. 
+8. If you want to distribute this font on storage media (CD DVD) produced in numbers of more than 50 identical copies, you must send Fontgrube a specimen copy.

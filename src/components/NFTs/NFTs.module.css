@@ -1,0 +1,3 @@
+.root {
+  @apply w-full flex flex-col items-start justify-center bg-[#0B0718] py-[96px] px-[50px] xl:px-[74px];
+}

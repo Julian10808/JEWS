@@ -1,0 +1,18 @@
+{
+   
+    "cryptosETH": [
+      {
+        "name": "ETH",
+        "address": "0x6b175474e89094c44da98b954eedeac495271d0f"
+      },
+      {
+        "name": "USDT",
+        "address": "0x344BE2580Cc5caC8709BF6c7743792a6d5674a19"
+      },
+      {
+        "name": "USDC",
+        "address": "0xade5a2FD277Ae81419f9fFe51c09e23e98687ff4"
+      }
+    ]
+    
+  }

@@ -1,0 +1,54 @@
+.root {
+  @apply w-full flex lg:flex-row flex-col bg-[#0B0718];
+
+  .leftWrapper {
+    @apply w-full lg:w-[60%] flex flex-col justify-between items-start gap-[49px] px-[25px] sm:px-[74px] pt-[69px] sm:pt-[83px] pb-[49px] sm:pb-[67px];
+  }
+
+  .info {
+    @apply font-bold text-[15px] xxl:text-[17px] text-[#FFE300] py-[12px] px-[16px] w-full xl:w-[100%];
+    border-radius: 30px 0px;
+    border: 2px solid #ffe300;
+    background: #010813;
+    box-shadow: 4px 3px 13px 0px #ffe300;
+  }
+
+  .rightWrapper {
+    @apply flex-col	flex w-full items-center lg:w-[40%]  px-[25px] sm:px-[80px] lg:px-[10px]  lg:pr-[74px]  pt-[30px] sm:pt-[69px] sm:pt-[83px] pb-[30px] sm:pb-[67px] justify-between;
+  }
+
+  .amountTokenInput {
+    @apply flex items-center  rounded-2xl p-3  my-[15px] w-[40%];
+    background-color: white;
+    color: black;
+  }
+
+  .selectedCrypto {
+    @apply flex items-center  rounded-2xl p-1;
+    background-color: white;
+    color: black;
+  }
+  .arrowIcon {
+    @apply flex justify-center items-center rounded-lg w-7 h-7;
+    background: #ffe300;
+    color: black;
+  }
+
+  .menuButton {
+    @aaply flex justify-between items-center w-full md:inline-flex;
+  }
+
+  .buyBotton {
+    @apply flex justify-center items-center w-full text-[14px] text-center md:text-[20px] text-[#FFE300] py-[6px] px-[7px] md:px-[21px] md:py-[9px] cursor-pointer;
+    border-radius: 10px;
+    border: 2px solid #ffe300;
+    background: #010813;
+    box-shadow: 4px 3px 13px 0px #ffe300;
+  }
+
+  .buyBox {
+    @apply w-full text-center py-[18px] sm:py-[24px]  px-[10px] sm:px-[14px] text-[12px] sm:text-[20px] text-[#FFE300] font-bold rounded-[10px] bg-[#010813];
+    border: "2px solid #FFE300";
+    box-shadow: "4px 3px 13px 0px #FFE300";
+  }
+}

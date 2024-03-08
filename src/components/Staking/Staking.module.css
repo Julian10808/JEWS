@@ -1,0 +1,23 @@
+.root {
+  @apply w-full flex bg-[#0B0718] items-center justify-center flex-wrap;
+
+  .leftWrapper {
+    @apply flex-row  lg:w-[50%] items-center justify-center  px-[50px] sm:px-[70px] lg:pl-[0px] lg:pr-[50px]  2xl:px-[100px] lg:mt-[150px] relative;
+  }
+
+  .amountTokenInput {
+    @apply flex items-center  rounded-2xl p-3  my-[5px] w-[50%];
+    background-color: white;
+    color: black;
+  }
+
+  .periodInput {
+    @apply flex items-center  rounded-2xl p-3  my-[5px] w-[50%];
+    background-color: white;
+    color: black;
+  }
+
+  .rightWrapper {
+    @apply w-full lg:w-[50%] 2xl:w-[35%] flex flex-col items-start px-[20px] xl:px-[25px] lg:px-[40px] sm:px-[74px] py-[30px] sm:py-[56px];
+  }
+}
