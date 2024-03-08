@@ -1,0 +1,7 @@
+1.take tokenomics off
+2.menubar responsive(it isn't good in 1280px, and mobile menubar shows below 1000px)
+3.plz match picture's size in dreidels of NFT section.
+4.In mission section, it have to show pictures below 990px.
+    and in mission 2, it can show many pictures because of many descriptioin.
+    in mobile, let match responsive
+   
