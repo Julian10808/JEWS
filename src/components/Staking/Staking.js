@@ -44,16 +44,16 @@ const Staking = () => {
     address: addressContract.addressNFT,
     abi: JEWNFT,
   };
-  //===========stable token Contract Config================
-  let erc20ContractConfig = {};
-  erc20ContractConfig = {
+  //===========Jew Contract Config================
+  let erc20JewContractConfig = {};
+  erc20JewContractConfig = {
     address: addressContract.addressJew,
     abi: Erc20Json,
   };
 
-  //===========stable token Contract Config================
+  //===========Shekel Contract Config================
   let erc20ShekelContractConfig = {};
-  erc20ContractConfig = {
+  erc20ShekelContractConfig = {
     address: addressContract.addressShekel,
     abi: Erc20Json,
   };
@@ -76,11 +76,11 @@ const Staking = () => {
 
   //=========== allowance Amount================
   const {
-    data: allownceAmount,
+    data: allownceJewAmount,
 
     refetch,
   } = useContractRead({
-    ...erc20ContractConfig,
+    ...erc20JewContractConfig,
     functionName: "allowance",
     args: [address, addressContract.addressNFT],
   });
@@ -91,7 +91,7 @@ const Staking = () => {
     error: erc20ApproveConfigError,
     isError: isErc20ContractConfigError,
   } = usePrepareContractWrite({
-    ...erc20ContractConfig,
+    ...erc20JewContractConfig,
     functionName: "approve",
     args: [
       addressContract.addressNFT,
@@ -100,7 +100,7 @@ const Staking = () => {
   });
   const {
     data: erc20ApproveReturnData,
-    write: approve,
+    write: approveJew,
     error: Erc20ApproveError,
     isLoading: approvedLoading,
     isSuccess: approvedSuccess,
@@ -226,10 +226,10 @@ const Staking = () => {
 
   const onStake = async () => {
     await stake();
-    setStaking(1);
-    setTimeout(() => {
-      setStaking(2);
-    }, 3000);
+    // setStaking(1);
+    // setTimeout(() => {
+    //   setStaking(2);
+    // }, 3000);
   };
 
   const onClaim = async () => {
@@ -240,8 +240,8 @@ const Staking = () => {
     await unStake();
   };
 
-  const onApprove = async () => {
-    await approve();
+  const onApproveJew = async () => {
+    await approveJew();
   };
 
   const onApproveShekel = async () => {
@@ -377,7 +377,7 @@ const Staking = () => {
   }, [data]);
 
   console.log(
-    allownceAmount,
+    allownceJewAmount,
     web3.utils.toNumber(web3.utils.toWei(stakedAmount, "ether")),
     "dafsdgadfaswd"
   );
@@ -476,8 +476,8 @@ const Staking = () => {
               after {stakedPeriod} days
             </div>
           </div>
-          {allownceAmount >=
-            web3.utils.toNumber(web3.utils.toWei(stakedAmount, "ether"))}
+          {/* {allownceJewAmount >=
+            web3.utils.toNumber(web3.utils.toWei(stakedAmount, "ether"))} */}
           {isStakedStatues?.[0] ? (
             isClaim ? (
               <button
@@ -512,7 +512,7 @@ const Staking = () => {
                 )}
               </button>
             )
-          ) : allownceAmount >=
+          ) : allownceJewAmount >=
             web3.utils.toNumber(web3.utils.toWei(stakedAmount, "ether")) ? (
             <button
               className="h-[50px] w-full text-[white] text-[24px] font-bold bg-[#7659AD] rounded-[10px] h-[20%]"
@@ -532,7 +532,7 @@ const Staking = () => {
           ) : (
             <button
               className="h-[50px] w-full text-[white] text-[24px] font-bold bg-[#7659AD] rounded-[10px] h-[20%]"
-              onClick={onApprove}
+              onClick={onApproveJew}
             >
               Approve
               {progress === true ? (
