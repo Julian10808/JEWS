@@ -64,7 +64,7 @@ const Staking = () => {
     functionName: "stakeInfo",
     args: [address],
   });
-  console.log(isStakedStatues, "stake statues");
+  console.log(isStakedStatues?.formatted, "stake statues");
 
   //=========== claim possible===============
   const { data: isClaim } = useContractRead({
@@ -500,7 +500,7 @@ const Staking = () => {
                 className="h-[50px] w-full text-[white] text-[24px] font-bold bg-[#7659AD] rounded-[10px] h-[20%]"
                 onClick={onUnStake}
               >
-                Unstake ({formatUnits(Number(isStakedStatues?.[1]), 18)} staked)
+                Unstake ({isStakedStatues?.formatted} staked)
                 {progress === true ? (
                   <CircularProgress
                     className="text-[18px]"
