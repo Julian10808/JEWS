@@ -337,6 +337,8 @@ const Staking = () => {
   useEffect(() => {
     if (approvedSuccess === true) {
       toast("Approved Success!");
+    } else if (shekelSuccess === true) {
+      toast("Approved Success!");
     } else if (StakeSuccess === true) {
       toast("You staked jewcoin with jewcoins!");
     } else if (ClaimSuccess === true) {
@@ -346,29 +348,43 @@ const Staking = () => {
     }
     setProgress(false);
     refetch();
-  }, [approvedSuccess, StakeSuccess, ClaimSuccess, UnStakeSuccess]);
+  }, [
+    approvedSuccess,
+    shekelSuccess,
+    StakeSuccess,
+    ClaimSuccess,
+    UnStakeSuccess,
+  ]);
 
   useEffect(() => {
     if (
       approvedLoading === true ||
+      shekelLoading === true ||
       StakeLoading === true ||
       ClaimLoading === true ||
       UnStakeSuccess === true
     ) {
       setProgress(true);
     }
-  }, [approvedLoading, StakeLoading, ClaimLoading, UnStakeSuccess]);
+  }, [
+    approvedLoading,
+    shekelLoading,
+    StakeLoading,
+    ClaimLoading,
+    UnStakeSuccess,
+  ]);
 
   useEffect(() => {
     if (
       approvedError === true ||
+      shekelError === true ||
       StakeError === true ||
       ClaimError === true ||
       UnStakeError === true
     ) {
       setProgress(false);
     }
-  }, [approvedError, StakeError, ClaimError, UnStakeError]);
+  }, [approvedError, shekelError, StakeError, ClaimError, UnStakeError]);
 
   useEffect(() => {
     if (data !== undefined) {
