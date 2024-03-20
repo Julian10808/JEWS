@@ -3,17 +3,24 @@ import s from "./Airdrop.module.css";
 import { CircularProgress } from "@mui/material";
 import { useEffect, useState } from "react";
 import {
-  useContractRead,
-  useNetwork,
   useAccount,
+  useBalance,
+  useContractRead,
   usePrepareContractWrite,
   useContractWrite,
+  useTransaction,
+  useWaitForTransaction,
 } from "wagmi";
+import { toast } from "react-toastify";
+import addressContract from "../../contracts/contractAddress.json";
+import JEWNFT from "../../contracts/abi/JEWNFT.json";
 
 const Airdrop = () => {
   const { address, connector, isConnected } = useAccount();
-
+  const [isClaimed, setClaimed] = useState(false);
+  const [flag, setChangeFlag] = useState(false);
   const [staking, setStaking] = useState(0);
+  const [progress, setProgress] = useState(false);
   const [claim, setClaim] = useState(false);
   const [curr, setCurr] = useState(0);
   const [name, setName] = useState("Yarmulke");
@@ -21,6 +28,70 @@ const Airdrop = () => {
   const [balance, setBalance] = useState(100);
   const [stakedPeriod, setStakedPeriod] = useState(0);
   const [stakedAmount, setStakedAmount] = useState(0);
+
+  //=========== Contract Config================
+  let contractConfig = {};
+  contractConfig = {
+    address: addressContract.addressNFT,
+    abi: JEWNFT,
+  };
+
+  //=========== isClaimableSkin================
+  const { data: claiamble, refetch: isClaimableSkinRefetch } = useContractRead({
+    ...contractConfig,
+    functionName: "isClaimableSkin",
+    args: [address],
+  });
+
+  console.log(claiamble, "isClaimableSkin");
+  //=============buy stable token===========
+  const {
+    config: claimSkinConfig,
+    // error: claimSkinConfigError,
+    // isError: isClaimSkinConfigError,
+  } = usePrepareContractWrite({
+    ...contractConfig,
+    functionName: "claimSkin",
+    args: [],
+  });
+
+  const {
+    data: claimSkinConfigData,
+    write: claimSkin,
+    // error: ClaimSkinConfigError,
+    isLoading: ClaimSkinLoading,
+    isSuccess: ClaimSkinSuccess,
+    isError: ClaimSkinError,
+  } = useContractWrite(claimSkinConfig);
+
+  const waitForClaimSkinTransaction = useWaitForTransaction({
+    hash: claimSkinConfigData?.hash,
+    onSuccess(data) {
+      setChangeFlag(true);
+      toast.success("You claimed foreskin token!", { autoClose: 5000 });
+      setProgress(false);
+      setClaimed(true);
+    },
+  });
+
+  const onClaimSkin = async () => {
+    if (isConnected === true) {
+      await claimSkin();
+      setProgress(true);
+    } else {
+      toast.warn(
+        "Your wallet is disconnected!After disconnect, plz connect again!",
+        { autoClose: 5000 }
+      );
+    }
+  };
+
+  const onToast = async () => {
+    toast.warn(
+      "Auchwallet still has JEWS in it, come back to claim when it’s empty.",
+      { autoClose: 5000 }
+    );
+  };
 
   const onStaking = () => {
     setStaking(1);
@@ -85,7 +156,6 @@ const Airdrop = () => {
     // setName(images[curr - 1].name);
     // setAmount(images[curr - 1].amount);
     // setPeriod(images[curr - 1].period);
-    // console.log(curr, name, "prev");
   };
 
   const next = () => {
@@ -94,7 +164,6 @@ const Airdrop = () => {
     // setName(images[curr + 1].name);
     // setAmount(images[curr + 1].amount);
     // setPeriod(images[curr + 1].period);
-    // console.log(curr, name, "next");
   };
 
   const onAmountChangeHandler = (e) => {
@@ -119,6 +188,17 @@ const Airdrop = () => {
     // Clear the interval when the component unmounts
   }, [curr]);
 
+  useEffect(() => {
+    if (ClaimSkinError === true) {
+      setProgress(false);
+      toast.error("Your progress is failed!", { autoClose: 5000 });
+    }
+  }, [ClaimSkinError]);
+
+  useEffect(() => {
+    isClaimableSkinRefetch();
+    setChangeFlag(false);
+  }, [flag]);
   return (
     <div className={s.root} id="airdrop_panel">
       <div className={s.rightWrapper}>
@@ -166,13 +246,30 @@ const Airdrop = () => {
             the Auchwallet burn has finished. For every 1000 Jewcoin Staked,
             users will be able to claim 1 $SKIN
           </div>
-
-          <button
-            className="h-[50px] w-full text-[white] text-[24px] font-bold bg-[#7659AD] rounded-[10px] h-[20%]"
-            onClick={onStaking}
-          >
-            Claim
-          </button>
+          {claiamble !== undefined && claiamble === true ? (
+            <button
+              className="h-[50px] w-full text-[white] text-[24px] font-bold bg-[#7659AD] rounded-[10px] h-[20%]"
+              onClick={onClaimSkin}
+            >
+              {isClaimed === true ? "Claimed" : "Claim"}
+              {progress === true ? (
+                <CircularProgress
+                  className="text-[18px]"
+                  color="inherit"
+                  size={25}
+                />
+              ) : (
+                ""
+              )}
+            </button>
+          ) : (
+            <button
+              className="h-[50px] w-full text-[white] text-[24px] font-bold bg-[#7659AD] rounded-[10px] h-[20%]"
+              onClick={onToast}
+            >
+              Can't Claim
+            </button>
+          )}
         </div>
       </div>
     </div>

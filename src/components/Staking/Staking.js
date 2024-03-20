@@ -4,39 +4,38 @@ import { CircularProgress } from "@mui/material";
 import { useEffect, useState } from "react";
 import {
   useContractRead,
-  useNetwork,
   useAccount,
   usePrepareContractWrite,
   useContractWrite,
   useBalance,
+  useWaitForTransaction,
 } from "wagmi";
+import { formatEther, formatUnits } from "viem";
 import web3 from "web3";
 import { toast } from "react-toastify";
-import { formatEther, formatUnits } from "viem";
-
 import addressContract from "../../contracts/contractAddress.json";
 import JEWNFT from "../../contracts/abi/JEWNFT.json";
 import Erc20Json from "../../contracts/abi/ERC20.json";
 
 const Staking = () => {
   const { address, connector, isConnected } = useAccount();
+  const [stakeLoadingIcon, setStakeLoadingIcon] = useState(false);
+  const [buyNFTLoadingIcon, setBuyNFTLoadingIcon] = useState(false);
 
-  const [staking, setStaking] = useState(0);
-  const [progress, setProgress] = useState(false);
+  const [flag, setChangeFlag] = useState(false);
   const [curr, setCurr] = useState(0);
   const [name, setName] = useState("Yarmulke");
-  // const [amount, setAmount] = useState(50);
   const [balanceShekel, setBalanceShekel] = useState(0);
   const [stakedPeriod, setStakedPeriod] = useState(0);
   const [stakedAmount, setStakedAmount] = useState(0);
-  const [shekelAmountForBuy, setShekelAmountForBuy] = useState(50);
+  const [shekelAmountForBuy, setShekelAmountForBuy] = useState(0);
 
-  const { data, isError } = useBalance({
+  const { data, refetch: shekelBalanceRefetch } = useBalance({
     address: address,
     token: "0x4DFbb247f9A7277c5c2F900d5e86a6Ceb98e0f63",
   });
-
-  console.log(data?.formatted, "balance!---------");
+  console.log(address, connector, isConnected, "wallet and user info=-=-=-==-");
+  console.log(address, connector, isConnected, "wallet and user info=-=-=-==-");
 
   //=========== Contract Config================
   let contractConfig = {};
@@ -59,37 +58,30 @@ const Staking = () => {
   };
 
   //=========== user staked info================
-  const { data: isStakedStatues } = useContractRead({
-    ...contractConfig,
-    functionName: "stakeInfo",
-    args: [address],
-  });
-  console.log(isStakedStatues?.formatted, "stake statues");
-
+  const { data: isStakedStatues, refetch: isStakedStatuesRefetch } =
+    useContractRead({
+      ...contractConfig,
+      functionName: "stakeInfo",
+      args: [address],
+    });
   //=========== claim possible===============
-  const { data: isClaim } = useContractRead({
+  const { data: isClaim, refetch: isClaimRefetch } = useContractRead({
     ...contractConfig,
     functionName: "isClaimableShekel",
     args: [address],
   });
-  console.log(isClaim, "claimable statues");
-
-  //=========== allowance Amount================
+  //=========== allowance Jew Amount================
+  const { data: allownceJewAmount, refetch: allownceJewAmountRefetch } =
+    useContractRead({
+      ...erc20JewContractConfig,
+      functionName: "allowance",
+      args: [address, addressContract.addressNFT],
+    });
+  //=============Approve Jew token===========
   const {
-    data: allownceJewAmount,
-
-    refetch,
-  } = useContractRead({
-    ...erc20JewContractConfig,
-    functionName: "allowance",
-    args: [address, addressContract.addressNFT],
-  });
-
-  //=============Approve stable token===========
-  const {
-    config: erc20ApproveContractConfig,
-    error: erc20ApproveConfigError,
-    isError: isErc20ContractConfigError,
+    config: JewApproveContractConfig,
+    // error: erc20ApproveConfigError,
+    // isError: isErc20ContractConfigError,
   } = usePrepareContractWrite({
     ...erc20JewContractConfig,
     functionName: "approve",
@@ -99,26 +91,38 @@ const Staking = () => {
     ],
   });
   const {
-    data: erc20ApproveReturnData,
+    data: JewApproveReturnData,
     write: approveJew,
-    error: Erc20ApproveError,
-    isLoading: approvedLoading,
-    isSuccess: approvedSuccess,
-    isError: approvedError,
-  } = useContractWrite(erc20ApproveContractConfig);
+    // error: Erc20ApproveError,
+    isLoading: ApprovedJewLoading,
+    isSuccess: ApprovedJewSuccess,
+    isError: ApprovedJewError,
+  } = useContractWrite(JewApproveContractConfig);
+
+  const waitForJewApproveTransaction = useWaitForTransaction({
+    hash: JewApproveReturnData?.hash,
+    onSuccess(data) {
+      setChangeFlag(true);
+      setStakeLoadingIcon(false);
+      toast.success("You approved the jewcoin successfully!", {
+        autoClose: 5000,
+      });
+    },
+  });
 
   //=========== allowance Shekel Amount================
-  const { data: allownceShekelAmount } = useContractRead({
-    ...erc20ShekelContractConfig,
-    functionName: "allowance",
-    args: [address, addressContract.addressNFT],
-  });
+  const { data: allownceShekelAmount, refetch: allownceShekelAmountRefetch } =
+    useContractRead({
+      ...erc20ShekelContractConfig,
+      functionName: "allowance",
+      args: [address, addressContract.addressNFT],
+    });
 
   //=============Approve shekel token===========
   const {
     config: shekelApproveContractConfig,
-    error: shekelApproveConfigError,
-    isError: isShekelContractConfigError,
+    // error: shekelApproveConfigError,
+    // isError: isShekelContractConfigError,
   } = usePrepareContractWrite({
     ...erc20ShekelContractConfig,
     functionName: "approve",
@@ -130,17 +134,28 @@ const Staking = () => {
   const {
     data: shekelApproveReturnData,
     write: approveShekel,
-    error: ShekelApproveError,
-    isLoading: shekelLoading,
-    isSuccess: shekelSuccess,
-    isError: shekelError,
+    // error: ShekelApproveError,
+    isLoading: ApproveShekelLoading,
+    isSuccess: ApproveShekelSuccess,
+    isError: ApproveShekelError,
   } = useContractWrite(shekelApproveContractConfig);
+
+  const waitForShekelApproveTransaction = useWaitForTransaction({
+    hash: shekelApproveReturnData?.hash,
+    onSuccess(data) {
+      setChangeFlag(true);
+      setBuyNFTLoadingIcon(false);
+      toast.success("You approved the shekel successfully!", {
+        autoClose: 5000,
+      });
+    },
+  });
 
   //=============stake jewcoin===========
   const {
     config: stakeConfig,
-    error: stakeConfigError,
-    isError: isStakeConfigError,
+    // error: stakeConfigError,
+    // isError: isStakeConfigError,
   } = usePrepareContractWrite({
     ...contractConfig,
     functionName: "stake",
@@ -150,25 +165,31 @@ const Staking = () => {
     ],
   });
 
-  console.log(
-    web3.utils.toNumber(web3.utils.toWei(stakedAmount, "ether")),
-    stakedPeriod
-  );
-
   const {
     data: stakeConfigData,
     write: stake,
-    error: StakeConfigError,
+    // error: StakeConfigError,
     isLoading: StakeLoading,
     isSuccess: StakeSuccess,
     isError: StakeError,
   } = useContractWrite(stakeConfig);
 
+  const waitForStakeApproveTransaction = useWaitForTransaction({
+    hash: stakeConfigData?.hash,
+    onSuccess(data) {
+      setChangeFlag(true);
+      setStakeLoadingIcon(false);
+      toast.success("You staked the jewcoin successfully!", {
+        autoClose: 5000,
+      });
+    },
+  });
+
   //=============unstake jewcoin===========
   const {
     config: unStakeConfig,
-    error: unstakeConfigError,
-    isError: isUnStakeConfigError,
+    // error: unstakeConfigError,
+    // isError: isUnStakeConfigError,
   } = usePrepareContractWrite({
     ...contractConfig,
     functionName: "unStake",
@@ -178,17 +199,28 @@ const Staking = () => {
   const {
     data: unStakeConfigData,
     write: unStake,
-    error: UnStakeConfigError,
+    // error: UnStakeConfigError,
     isLoading: UnStakeLoading,
     isSuccess: UnStakeSuccess,
     isError: UnStakeError,
   } = useContractWrite(unStakeConfig);
 
+  const waitForUnStakeApproveTransaction = useWaitForTransaction({
+    hash: unStakeConfigData?.hash,
+    onSuccess(data) {
+      setChangeFlag(true);
+      setStakeLoadingIcon(false);
+      toast.success("You unstaked the jewcoin successfully!", {
+        autoClose: 5000,
+      });
+    },
+  });
+
   //=============claim shekel token===========
   const {
     config: claimConfig,
-    error: claimConfigError,
-    isError: isClaimConfigError,
+    // error: claimConfigError,
+    // isError: isClaimConfigError,
   } = usePrepareContractWrite({
     ...contractConfig,
     functionName: "claim",
@@ -198,17 +230,29 @@ const Staking = () => {
   const {
     data: claimConfigData,
     write: claim,
-    error: ClaimConfigError,
+    // error: ClaimConfigError,
     isLoading: ClaimLoading,
     isSuccess: ClaimSuccess,
     isError: ClaimError,
   } = useContractWrite(claimConfig);
 
+  const waitForClaimApproveTransaction = useWaitForTransaction({
+    hash: claimConfigData?.hash,
+    onSuccess(data) {
+      setChangeFlag(true);
+      setStakeLoadingIcon(false);
+      toast.success(
+        "You claimed the jewcoin and shekel for reward successfully!",
+        { autoClose: 5000 }
+      );
+    },
+  });
+
   //=============Buy NFT===========
   const {
     config: buyNFTConfig,
-    error: buyNFTConfigError,
-    isError: isBuyNFTConfigError,
+    // error: buyNFTConfigError,
+    // isError: isBuyNFTConfigError,
   } = usePrepareContractWrite({
     ...contractConfig,
     functionName: "buyNFT",
@@ -218,38 +262,93 @@ const Staking = () => {
   const {
     data: buyNFTConfigData,
     write: buyNFT,
-    error: BuyNFTConfigError,
+    // error: BuyNFTConfigError,
     isLoading: BuyNFTLoading,
     isSuccess: BuyNFTSuccess,
     isError: BuyNFTError,
   } = useContractWrite(buyNFTConfig);
 
-  const onStake = async () => {
-    await stake();
-    // setStaking(1);
-    // setTimeout(() => {
-    //   setStaking(2);
-    // }, 3000);
-  };
-
-  const onClaim = async () => {
-    await claim();
-  };
-
-  const onUnStake = async () => {
-    await unStake();
-  };
+  const waitForBuyNFTApproveTransaction = useWaitForTransaction({
+    hash: buyNFTConfigData?.hash,
+    onSuccess(data) {
+      setChangeFlag(true);
+      setBuyNFTLoadingIcon(false);
+      toast.success("Purchase Successfull", {
+        autoClose: 5000,
+      });
+    },
+  });
 
   const onApproveJew = async () => {
-    await approveJew();
+    if (isConnected === true) {
+      await approveJew();
+      setStakeLoadingIcon(true);
+    } else {
+      toast.warn(
+        "Your wallet is disconnected!After disconnect, plz connect again!",
+        { autoClose: 5000 }
+      );
+    }
   };
 
   const onApproveShekel = async () => {
-    await approveShekel();
+    if (isConnected === true) {
+      await approveShekel();
+      setBuyNFTLoadingIcon(true);
+    } else {
+      toast.warn(
+        "Your wallet is disconnected!After disconnect, plz connect again!",
+        { autoClose: 5000 }
+      );
+    }
+  };
+
+  const onStake = async () => {
+    if (isConnected === true) {
+      await stake();
+      setStakeLoadingIcon(true);
+    } else {
+      toast.warn(
+        "Your wallet is disconnected!After disconnect, plz connect again!",
+        { autoClose: 5000 }
+      );
+    }
+  };
+
+  const onClaim = async () => {
+    if (isConnected === true) {
+      await claim();
+      setStakeLoadingIcon(true);
+    } else {
+      toast.warn(
+        "Your wallet is disconnected!After disconnect, plz connect again!",
+        { autoClose: 5000 }
+      );
+    }
+  };
+
+  const onUnStake = async () => {
+    if (isConnected === true) {
+      await unStake();
+      setStakeLoadingIcon(true);
+    } else {
+      toast.warn(
+        "Your wallet is disconnected!After disconnect, plz connect again!",
+        { autoClose: 5000 }
+      );
+    }
   };
 
   const onBuyNFT = async () => {
-    await buyNFT();
+    if (isConnected === true) {
+      await buyNFT();
+      setBuyNFTLoadingIcon(true);
+    } else {
+      toast.warn(
+        "Your wallet is disconnected!After disconnect, plz connect again!",
+        { autoClose: 5000 }
+      );
+    }
   };
 
   const images = [
@@ -291,7 +390,7 @@ const Staking = () => {
     },
     {
       name: "Torah",
-      link: "assets/images/Torah/1.jpg",
+      link: "assets/images/Torah/Torah.gif",
       amount: 200,
       period: 21,
     },
@@ -313,11 +412,15 @@ const Staking = () => {
 
   const onAmountChangeHandler = (e) => {
     const inputValue = e.target.value;
-    if (/^\d*$/.test(inputValue)) {
-      // Update the state with the new value
-      setStakedAmount(inputValue);
-      refetch();
-    }
+    // if (/^\d*$/.test(inputValue)) {
+    // Update the state with the new value
+    setStakedAmount(inputValue);
+    isStakedStatuesRefetch();
+    isClaimRefetch();
+    allownceJewAmountRefetch();
+    allownceShekelAmountRefetch();
+    shekelBalanceRefetch();
+    // }
   };
 
   const onDateChangeHandler = (e) => {
@@ -335,68 +438,43 @@ const Staking = () => {
   }, [curr]);
 
   useEffect(() => {
-    if (approvedSuccess === true) {
-      toast("Approved Success!");
-    } else if (shekelSuccess === true) {
-      toast("Approved Success!");
-    } else if (StakeSuccess === true) {
-      toast("You staked jewcoin with jewcoins!");
-    } else if (ClaimSuccess === true) {
-      toast("You claimed shekel token!");
-    } else if (UnStakeSuccess === true) {
-      toast("You unStake jewcoin!");
-    }
-    setProgress(false);
-    refetch();
-  }, [
-    approvedSuccess,
-    shekelSuccess,
-    StakeSuccess,
-    ClaimSuccess,
-    UnStakeSuccess,
-  ]);
+    isStakedStatuesRefetch();
+    shekelBalanceRefetch();
+    isClaimRefetch();
+    allownceJewAmountRefetch();
+    allownceShekelAmountRefetch();
+    setChangeFlag(false);
+    setStakedAmount(0);
+    setStakedPeriod(0);
+  }, [flag]);
 
   useEffect(() => {
     if (
-      approvedLoading === true ||
-      shekelLoading === true ||
-      StakeLoading === true ||
-      ClaimLoading === true ||
-      UnStakeSuccess === true
-    ) {
-      setProgress(true);
-    }
-  }, [
-    approvedLoading,
-    shekelLoading,
-    StakeLoading,
-    ClaimLoading,
-    UnStakeSuccess,
-  ]);
-
-  useEffect(() => {
-    if (
-      approvedError === true ||
-      shekelError === true ||
+      ApprovedJewError === true ||
+      ApproveShekelError === true ||
       StakeError === true ||
       ClaimError === true ||
-      UnStakeError === true
+      UnStakeError === true ||
+      BuyNFTError === true
     ) {
-      setProgress(false);
+      setStakeLoadingIcon(false);
+      setBuyNFTLoadingIcon(false);
+      toast.error("Your transaction is failed!", { autoClose: 5000 });
     }
-  }, [approvedError, shekelError, StakeError, ClaimError, UnStakeError]);
+  }, [
+    ApprovedJewError,
+    ApproveShekelError,
+    StakeError,
+    ClaimError,
+    UnStakeError,
+    BuyNFTError,
+  ]);
 
   useEffect(() => {
     if (data !== undefined) {
       setBalanceShekel(data?.formatted);
     } else setBalanceShekel(0);
   }, [data]);
-
-  console.log(
-    allownceJewAmount,
-    web3.utils.toNumber(web3.utils.toWei(stakedAmount, "ether")),
-    "dafsdgadfaswd"
-  );
 
   return (
     <div className={s.root} id="staking_panel">
@@ -450,6 +528,12 @@ const Staking = () => {
         </div>
       </div>
       <div className={s.leftWrapper}>
+        <div className="text-[14px] sm:text-[18px] font-semibold mb-[30px] text-center">
+          Please allow up to 1 minute for the website to update after buying,
+          staking and claiming. If it does not update in that time, please
+          refresh the webpage. If you still are having trouble, please reach out
+          in the telegram chat.
+        </div>
         <div
           className="relative  w-full font-bold h-full  flex-col ms:flex-row items-center justify-center gap-[20px] bg-[#FFE300] rounded-[20px] px-[20px] xl:px-[25px] lg:px-[12px] sm:px-[32px] py-[30px]  mb-[20px]"
           style={{ boxShadow: "4px 3px 13px 0px #FFE300" }}
@@ -501,7 +585,7 @@ const Staking = () => {
                 onClick={onClaim}
               >
                 Claim
-                {progress === true ? (
+                {stakeLoadingIcon === true ? (
                   <CircularProgress
                     className="text-[18px]"
                     color="inherit"
@@ -516,8 +600,8 @@ const Staking = () => {
                 className="h-[50px] w-full text-[white] text-[24px] font-bold bg-[#7659AD] rounded-[10px] h-[20%]"
                 onClick={onUnStake}
               >
-                Unstake ({isStakedStatues?.formatted} staked)
-                {progress === true ? (
+                Unstake ({formatUnits(isStakedStatues?.[1], 18)} staked)
+                {stakeLoadingIcon === true ? (
                   <CircularProgress
                     className="text-[18px]"
                     color="inherit"
@@ -528,14 +612,14 @@ const Staking = () => {
                 )}
               </button>
             )
-          ) : allownceJewAmount >=
+          ) : (allownceJewAmount !== undefined ? allownceJewAmount : 0) >=
             web3.utils.toNumber(web3.utils.toWei(stakedAmount, "ether")) ? (
             <button
               className="h-[50px] w-full text-[white] text-[24px] font-bold bg-[#7659AD] rounded-[10px] h-[20%]"
               onClick={onStake}
             >
               Stake
-              {progress === true ? (
+              {stakeLoadingIcon === true ? (
                 <CircularProgress
                   className="text-[18px]"
                   color="inherit"
@@ -551,7 +635,7 @@ const Staking = () => {
               onClick={onApproveJew}
             >
               Approve
-              {progress === true ? (
+              {stakeLoadingIcon === true ? (
                 <CircularProgress
                   className="text-[18px]"
                   color="inherit"
@@ -563,8 +647,14 @@ const Staking = () => {
             </button>
           )}
         </div>
+        <div className="text-[14px] sm:text-[18px] font-semibold mt-[10px] text-center">
+          Once you have staked your Jewcoins, if you want to stake additional
+          tokens you will first need to unstake all Jewcoins before re-staking
+          your new and improved Jewcoin balance.
+        </div>
+
         <div
-          className="relative w-full  h-full flex flex-col ms:flex-row items-center justify-center gap-[20px] bg-[#FFE300] rounded-[20px] px-[20px] xl:px-[25px] lg:px-[12px] sm:px-[32px] py-[30px]  mb-[20px]"
+          className="relative w-full  h-full flex flex-col ms:flex-row items-center justify-center gap-[20px] bg-[#FFE300] rounded-[20px] px-[20px] xl:px-[25px] lg:px-[12px] sm:px-[32px] py-[30px]  mb-[20px] mt-[10px]"
           style={{ boxShadow: "4px 3px 13px 0px #FFE300" }}
         >
           <div className="overflow-hidden relative  sm:w-[85%] md:w-[55%] lg:w-[100%]">
@@ -655,15 +745,24 @@ const Staking = () => {
               </div>
             </div>
             {balanceShekel >= shekelAmountForBuy && isConnected ? (
-              allownceShekelAmount >
+              (allownceShekelAmount !== undefined ? allownceShekelAmount : 0) <
               web3.utils.toNumber(
                 web3.utils.toWei(shekelAmountForBuy, "ether")
               ) ? (
                 <button
-                  className="h-[50px] w-full text-[white] text-[24px] font-bold bg-[#7659AD] rounded-[10px] h-[20%]"
+                  className="h-[50px] w-full text-[white] text-[20px] font-bold bg-[#7659AD] rounded-[10px] h-[20%]"
                   onClick={onApproveShekel}
                 >
                   Approve Shekel
+                  {buyNFTLoadingIcon === true ? (
+                    <CircularProgress
+                      className="text-[18px]"
+                      color="inherit"
+                      size={25}
+                    />
+                  ) : (
+                    ""
+                  )}
                 </button>
               ) : (
                 <button
@@ -671,11 +770,20 @@ const Staking = () => {
                   onClick={onBuyNFT}
                 >
                   Buy NFT
+                  {buyNFTLoadingIcon === true ? (
+                    <CircularProgress
+                      className="text-[18px]"
+                      color="inherit"
+                      size={25}
+                    />
+                  ) : (
+                    ""
+                  )}
                 </button>
               )
             ) : (
               <button className="h-[50px] w-full text-[white] text-[24px] font-bold bg-[black] rounded-[10px] h-[20%]">
-                No Blance
+                No Balance
               </button>
             )}
           </div>

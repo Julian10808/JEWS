@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Popover from "@mui/material/Popover";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
@@ -9,8 +9,9 @@ const NFTItem = ({
   images,
   description,
   nftId,
-  supplyNft,
   tokenAmount,
+  totalSupply,
+  mintedSupply,
 }) => {
   const [curr, setCurr] = useState(0);
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -28,12 +29,10 @@ const NFTItem = ({
 
   const prev = () => {
     setCurr((curr) => (curr === 0 ? images.length - 1 : curr - 1));
-    console.log(curr, "prev");
   };
 
   const next = () => {
     setCurr((curr) => (curr === images.length - 1 ? 0 : curr + 1));
-    console.log(curr, "next");
   };
 
   return (
@@ -147,7 +146,10 @@ const NFTItem = ({
 
         <div className="w-full flex items-center justify-between">
           <div className="text-[12px] text-[#fff] font-bold">Supply Minted</div>
-          <div className="text-[12px] text-[#fff] font-bold"> {supplyNft}</div>
+          <div className="text-[12px] text-[#fff] font-bold">
+            {" "}
+            {mintedSupply} /{totalSupply}
+          </div>
         </div>
         <div className="w-full flex items-center justify-between">
           <div className="text-[12px] text-[#fff] font-bold">

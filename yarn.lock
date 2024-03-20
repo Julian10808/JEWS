@@ -3252,6 +3252,11 @@
     "@svgr/plugin-jsx" "^6.5.1"
     "@svgr/plugin-svgo" "^6.5.1"
 
+"@tanstack/query-core@>=5.0.0":
+  "integrity" "sha512-kKv7VHIleC7cwpMS3M63mWUFFbdiRo7JZMVUyZ4z/79RZoAi7/vGTVkCrnNqyKl+zwBRkumYL+eiYtyShGZd0A=="
+  "resolved" "https://registry.npmjs.org/@tanstack/query-core/-/query-core-5.26.3.tgz"
+  "version" "5.26.3"
+
 "@tanstack/query-core@4.36.1":
   "integrity" "sha512-DJSilV5+ytBP1FbFcEJovv4rnnm/CokuVvrBEtW/Va9DvuJ3HksbXUJEpI0aV1KtuL4ZoO9AVE6PyNLzF7tLeA=="
   "resolved" "https://registry.npmjs.org/@tanstack/query-core/-/query-core-4.36.1.tgz"
@@ -3923,6 +3928,15 @@
     "@walletconnect/utils" "2.11.0"
     "abitype" "0.8.7"
     "eventemitter3" "^4.0.7"
+
+"@wagmi/core@^2.6.5":
+  "integrity" "sha512-DLyrc0o+dx05oIhBJuxnS7ekS5e6rB5mytlqPme+Km7aLdeBdcfYB4yJyYCyWoi93OLa7M5sbflTttz3o56bKw=="
+  "resolved" "https://registry.npmjs.org/@wagmi/core/-/core-2.6.5.tgz"
+  "version" "2.6.5"
+  dependencies:
+    "eventemitter3" "5.0.1"
+    "mipd" "0.0.5"
+    "zustand" "4.4.1"
 
 "@wagmi/core@1.4.13":
   "integrity" "sha512-ytMCvXbBOgfDu9Qw67279wq/jNEe7EZLjLyekX7ROnvHRADqFr3lwZI6ih41UmtRZAmXAx8Ghyuqy154EjB5mQ=="
@@ -7123,6 +7137,11 @@
   "resolved" "https://registry.npmjs.org/eventemitter3/-/eventemitter3-4.0.7.tgz"
   "version" "4.0.7"
 
+"eventemitter3@5.0.1":
+  "integrity" "sha512-GWkBvjiSZK87ELrYOSESUYeVIc9mvLLf/nXalMOS5dYrgZq9o5OVkbZAVM06CVxYsCwH9BDZFPlQTlPA1j4ahA=="
+  "resolved" "https://registry.npmjs.org/eventemitter3/-/eventemitter3-5.0.1.tgz"
+  "version" "5.0.1"
+
 "events@^3.2.0", "events@^3.3.0":
   "integrity" "sha512-mQw+2fkQbALzQ7V0MY0IqdnXNOeTtP4r0lN9z7AAawCXgqea7bDii20AYrIBrFd/Hx0M2Ocz6S111CaFkUcb0Q=="
   "resolved" "https://registry.npmjs.org/events/-/events-3.3.0.tgz"
@@ -10056,6 +10075,13 @@
   dependencies:
     "minipass" "^3.0.0"
     "yallist" "^4.0.0"
+
+"mipd@0.0.5":
+  "integrity" "sha512-gbKA784D2WKb5H/GtqEv+Ofd1S9Zj+Z/PGDIl1u1QAbswkxD28BQ5bSXQxkeBzPBABg1iDSbiwGG1XqlOxRspA=="
+  "resolved" "https://registry.npmjs.org/mipd/-/mipd-0.0.5.tgz"
+  "version" "0.0.5"
+  dependencies:
+    "viem" "^1.1.4"
 
 "mixin-deep@^1.2.0":
   "integrity" "sha512-WRoDn//mXBiJ1H40rqa3vH0toePwSsGb45iInWlTySa+Uu4k3tYUSxa2v1KqAiLtvlrSzaExqS1gtk96A9zvEA=="
@@ -14072,7 +14098,7 @@
   "resolved" "https://registry.npmjs.org/vary/-/vary-1.1.2.tgz"
   "version" "1.1.2"
 
-"viem@^1.0.0", "viem@>=0.3.35", "viem@~0.3.19 || ^1.0.0":
+"viem@^1.0.0", "viem@^1.1.4", "viem@>=0.3.35", "viem@~0.3.19 || ^1.0.0", "viem@2.x":
   "integrity" "sha512-BNVYdSaUjeS2zKQgPs+49e5JKocfo60Ib2yiXOWBT6LuVxY1I/6fFX3waEtpXvL1Xn4qu+BVitVtMh9lyThyhQ=="
   "resolved" "https://registry.npmjs.org/viem/-/viem-1.21.4.tgz"
   "version" "1.21.4"
@@ -14996,5 +15022,12 @@
   "integrity" "sha512-QFJWJMdlETcI69paJwhSMJz7PPWjVP8Sjhclxmxmxv/RYI7ZOvR5BHX+ktH0we9gTWQMxcne8q1OY8xxz604gw=="
   "resolved" "https://registry.npmjs.org/zustand/-/zustand-4.4.7.tgz"
   "version" "4.4.7"
+  dependencies:
+    "use-sync-external-store" "1.2.0"
+
+"zustand@4.4.1":
+  "integrity" "sha512-QCPfstAS4EBiTQzlaGP1gmorkh/UL1Leaj2tdj+zZCZ/9bm0WS7sI2wnfD5lpOszFqWJ1DcPnGoY8RDL61uokw=="
+  "resolved" "https://registry.npmjs.org/zustand/-/zustand-4.4.1.tgz"
+  "version" "4.4.1"
   dependencies:
     "use-sync-external-store" "1.2.0"

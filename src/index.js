@@ -1,5 +1,5 @@
-import React, { StrictMode } from "react";
-import ReactDOM from "react-dom/client";
+// import React, { StrictMode } from "react";
+// import ReactDOM from "react-dom/client";
 import { createRoot } from "react-dom/client";
 
 import "./index.css";
@@ -12,29 +12,36 @@ import {
 } from "@rainbow-me/rainbowkit";
 import { configureChains, createConfig, WagmiConfig } from "wagmi";
 import { mainnet, sepolia } from "wagmi/chains";
-import { alchemyProvider } from "wagmi/providers/alchemy";
+// import { alchemyProvider } from "wagmi/providers/alchemy";
 import { publicProvider } from "wagmi/providers/public";
-// import { PhantomConnector } from "phantom-wagmi-connector";
-import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
-import "@rainbow-me/rainbowkit/styles.css";
+import { infuraProvider } from "wagmi/providers/infura";
 
-const { chains, publicClient } = configureChains(
+// import { PhantomConnector } from "phantom-wagmi-connector";
+// import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
+import "@rainbow-me/rainbowkit/styles.css";
+// import { infuraProvider } from "@wagmi/core/providers/infura";
+
+const { chains, publicClient, webSocketPublicClient } = configureChains(
   [mainnet, sepolia],
   [
-    // alchemyProvider({ apiKey: 'ZbcJUctTzRg0qySTHx0jmolpmxP-5V3g' }),
-    publicProvider(),
+    infuraProvider({ apiKey: "6ed11913153a4847abaec3a4df8a42b5" }),
+    // publicProvider(),
   ]
+  // [
+  //   // alchemyProvider({ apiKey: 'ZbcJUctTzRg0qySTHx0jmolpmxP-5V3g' }),
+  //   publicProvider(),
+  // ],
   // [
   //   jsonRpcProvider({
   //     rpc: (chain) => ({
-  //       https: `https://data-seed-prebsc-1-s1.binance.org:8545`,
+  //       https: `https://goerli.infura.io/v3/6ed11913153a4847abaec3a4df8a42b5`,
   //     }),
   //   }),
   // ]
 );
 const { connectors } = getDefaultWallets({
-  appName: "youbuidl",
-  projectId: "a1dd57ddaed16cfb376bd7066679449f",
+  appName: "Jewcoin",
+  projectId: "9e4d7cc888739a5a23e607a0a005c0e5",
   chains,
 });
 
@@ -42,6 +49,7 @@ const wagmiConfig = createConfig({
   autoConnect: true,
   connectors,
   publicClient,
+  webSocketPublicClient,
   // connectors: [new PhantomConnector({ chains })],
 });
 

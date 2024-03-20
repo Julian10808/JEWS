@@ -93,29 +93,6 @@ const Roadmap = () => {
           </div>
         </div>
       </div>
-      <div className="w-full text-white text-[16px] sm:text-[30px] font-bold mt-[80px] mb-[36px] text-center lg:text-left">
-        More to be announced !
-      </div>
-      <div className="w-full lg:w-fit flex items-center justify-center gap-[22px]">
-        <div
-          className="p-[16px] sm:py-[18px] lg:py-[26px] lg:px-[28px] rounded-[10px] bg-[#010813] text-[12px] sm:text-[16px] text-[#FFE300] font-bold cursor-pointer"
-          style={{
-            border: "2px solid #FFE300",
-            boxShadow: "4px 3px 13px 0px #FFE300",
-          }}
-        >
-          Get Your Jewcoin
-        </div>
-        <div
-          className="p-[16px] sm:py-[18px] lg:py-[26px] sm:px-[20px] lg:px-[28px]  rounded-[10px] bg-[#FFE300] text-[12px] sm:text-[16px] text-[#000] font-bold cursor-pointer"
-          style={{
-            border: "2px solid #FFE300",
-            boxShadow: "4px 3px 13px 0px #FFE300",
-          }}
-        >
-          Connect Wallet
-        </div>
-      </div>
     </div>
   );
 };

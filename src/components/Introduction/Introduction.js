@@ -1,12 +1,5 @@
 import s from "./Introduction.module.css";
-import React, {
-  StrictMode,
-  useState,
-  useMemo,
-  useRef,
-  useEffect,
-  Fragment,
-} from "react";
+import { useState, useEffect, Fragment } from "react";
 import cn from "classnames";
 import TextTransition, { presets } from "react-text-transition";
 import { Menu, Transition } from "@headlessui/react";
@@ -16,30 +9,16 @@ import JEWNFT from "../../contracts/abi/JEWNFT.json";
 import addressContract from "../../contracts/contractAddress.json";
 import { toast } from "react-toastify";
 import { CircularProgress } from "@mui/material";
-
-import ExpandMoreOutlinedIcon from "@mui/icons-material/ExpandMoreOutlined";
-import { createRoot } from "react-dom/client";
-import { Canvas, useFrame } from "@react-three/fiber";
-import { Stats, OrbitControls, Environment, useGLTF } from "@react-three/drei";
-import { useControls } from "leva";
+import { formatEther, formatUnits } from "viem";
 import web3 from "web3";
-
 import {
-  Address,
-  ContractFunctionExecutionError,
-  TransactionExecutionError,
-  formatEther,
-  formatUnits,
-} from "viem";
-import {
-  erc20ABI,
   useAccount,
   useBalance,
   useContractRead,
-  useNetwork,
-  useToken,
   usePrepareContractWrite,
   useContractWrite,
+  useTransaction,
+  useWaitForTransaction,
 } from "wagmi";
 
 const TEXTS = [
@@ -48,34 +27,7 @@ const TEXTS = [
   "Where your Heart and Wallet Allign",
   "Proof you’re not Anti-Semetic",
 ];
-
 const cryptosETH = stableTokens.cryptosETH;
-
-// const JewModal = () => {
-//   const gltf = useGLTF("/assets/logo/logo.glb"); // Replace with the path to your GLB model
-//   const modelRef = useRef();
-
-//   // Event listener to handle right mouse button press
-//   const handleContextMenu = (event) => {
-//     event.preventDefault();
-//   };
-
-//   // This function will be called on each frame
-//   useFrame(() => {
-//     // Update the rotation of the model to rotate it only around the y-axis (right to left)
-//     modelRef.current.rotation.y += 0.01; // Adjust the rotation speed as needed
-//   });
-
-//   return (
-//     <group ref={modelRef} onContextMenu={handleContextMenu}>
-//       {/* Your GLB model */}
-//       <primitive object={gltf.scene} />
-
-//       {/* Other 3D objects in your scene go here */}
-//       {/* ... */}
-//     </group>
-//   );
-// };
 
 const Introduction = () => {
   const calculateTimeLeft = () => {
@@ -104,42 +56,35 @@ const Introduction = () => {
       seconds,
     };
   };
-
+  const [flag, setChangeFlag] = useState(false);
   const [index, setIndex] = useState(0);
   const [progress, setProgress] = useState(false);
   const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
   const [tokenAmount, setTokenAmount] = useState("");
   const [tokenPrice, setTokenPrice] = useState(0.15);
-
-  const [priceETH, setPriceToken] = useState(0);
   const [selectedCrypto, setSelectedCrypto] = useState("USDC");
   const [selectedCryptoAddress, setSelectedCryptoAddress] = useState(
     "0xade5a2FD277Ae81419f9fFe51c09e23e98687ff4"
   );
   const [neededUSD, setNeededUSD] = useState(0);
-  const [inputValue, setInputValue] = useState("");
   const [lastInputChangeTime, setLastInputChangeTime] = useState(0);
   const [timeoutId, setTimeoutId] = useState(null);
   const [balanceJew, setBalanceJew] = useState(0);
 
-  // const account = useAccount();
-  const { chain } = useNetwork();
-  const { address } = useAccount();
-
-  const { data, isError } = useBalance({
+  const { address, connector, isConnected } = useAccount();
+  const { data: balJewData, refetch: jewcoinBalanceRefetch } = useBalance({
     address: address,
     token: "0xE9959c7a1Cf7891Cac0bE4b2c835E723Db68a474",
   });
-
-  console.log(data?.formatted, "jewcon balance =-=-=-============");
+  console.log(address, connector, isConnected, "wallet and user info=-=-=-==-");
 
   useEffect(() => {
-    if (data !== undefined) {
-      setBalanceJew(data?.formatted);
+    if (balJewData !== undefined) {
+      setBalanceJew(balJewData?.formatted);
     } else {
       setBalanceJew(0);
     }
-  }, [data]);
+  }, [balJewData]);
 
   //===========stable token Contract Config================
   let erc20ContractConfig = {};
@@ -153,23 +98,19 @@ const Introduction = () => {
     address: addressContract.addressNFT,
     abi: JEWNFT,
   };
-
   //=========== allowance Amount================
-  const {
-    data: allownceAmount,
-    isSuccess,
-    refetch,
-  } = useContractRead({
-    ...erc20ContractConfig,
-    functionName: "allowance",
-    args: [address, addressContract.addressNFT],
-  });
+  const { data: allownceAmount, refetch: allownceAmountRefetch } =
+    useContractRead({
+      ...erc20ContractConfig,
+      functionName: "allowance",
+      args: [address, addressContract.addressNFT],
+    });
 
   //=============Approve stable token===========
   const {
     config: erc20ApproveContractConfig,
-    error: erc20ApproveConfigError,
-    isError: isErc20ContractConfigError,
+    // error: erc20ApproveConfigError,
+    // isError: isErc20ContractConfigError,
   } = usePrepareContractWrite({
     ...erc20ContractConfig,
     functionName: "approve",
@@ -181,17 +122,26 @@ const Introduction = () => {
   const {
     data: erc20ApproveReturnData,
     write: approve,
-    error: Erc20ApproveError,
+    // error: Erc20ApproveError,
     isLoading: approvedLoading,
     isSuccess: approvedSuccess,
     isError: approvedError,
   } = useContractWrite(erc20ApproveContractConfig);
 
+  const waitForApproveTransaction = useWaitForTransaction({
+    hash: erc20ApproveReturnData?.hash,
+    onSuccess(data) {
+      setChangeFlag(true);
+      toast.success("Approved Success!", { autoClose: 5000 });
+      setProgress(false);
+    },
+  });
+
   //=============buy stable token===========
   const {
     config: buyStableConfig,
-    error: buyStableConfigError,
-    isError: isBuyStableConfigError,
+    // error: buyStableConfigError,
+    // isError: isBuyStableConfigError,
   } = usePrepareContractWrite({
     ...contractConfig,
     functionName: "buyTokenByStable",
@@ -204,17 +154,28 @@ const Introduction = () => {
   const {
     data: buyStableConfigData,
     write: buyTokenByStable,
-    error: BuyStableConfigError,
+    // error: BuyStableConfigError,
     isLoading: StableLoading,
     isSuccess: StableSuccess,
     isError: StableError,
   } = useContractWrite(buyStableConfig);
 
+  const waitForBuyTransaction = useWaitForTransaction({
+    hash: buyStableConfigData?.hash,
+    onSuccess(data) {
+      setChangeFlag(true);
+      toast.success("You bought jewcoin with stablecoins!", {
+        autoClose: 5000,
+      });
+      setProgress(false);
+    },
+  });
+
   //=============buy ETH===========
   const {
     config: buyETHConfig,
-    error: buyETHConfigError,
-    isError: isBuyETHConfigError,
+    // error: buyETHConfigError,
+    // isError: isBuyETHConfigError,
   } = usePrepareContractWrite({
     ...contractConfig,
     functionName: "buyTokenByETH",
@@ -225,40 +186,68 @@ const Introduction = () => {
   const {
     data: buyETHConfigData,
     write: buyTokenByETH,
-    error: BuyETHConfigError,
+    // error: BuyETHConfigError,
     isLoading: ETHLoading,
     isSuccess: ETHSuccess,
     isError: ETHError,
   } = useContractWrite(buyETHConfig);
 
+  const waitForETHTransaction = useWaitForTransaction({
+    hash: buyETHConfigData?.hash,
+    onSuccess(data) {
+      setChangeFlag(true);
+      toast.success("You bought jewcoin with ETH!", { autoClose: 5000 });
+      setProgress(false);
+    },
+  });
+
   const buyWithStable = async () => {
-    await buyTokenByStable();
+    if (isConnected === true) {
+      await buyTokenByStable();
+      setProgress(true);
+    } else {
+      toast.warn(
+        "Your wallet is disconnected!After disconnect, plz connect again!",
+        { autoClose: 5000 }
+      );
+    }
   };
 
   const buyWithEth = async () => {
-    console.log(
-      web3.utils.toNumber(web3.utils.toWei(neededUSD, "ether")),
-      web3.utils.toNumber(web3.utils.toWei(tokenAmount, "ether")),
-      "sadfadgsdf"
-    );
-    await buyTokenByETH();
+    if (isConnected === true) {
+      await buyTokenByETH();
+      setProgress(true);
+    } else {
+      toast.warn(
+        "Your wallet is disconnected!After disconnect, plz connect again!",
+        { autoClose: 5000 }
+      );
+    }
   };
 
   const approveStable = async () => {
-    await approve();
+    if (isConnected === true) {
+      await approve();
+      setProgress(true);
+    } else {
+      toast.warn(
+        "Your wallet is disconnected!After disconnect, plz connect again!",
+        { autoClose: 5000 }
+      );
+    }
   };
 
   useEffect(() => {
-    if (approvedSuccess === true) {
-      toast("Approved Success!");
-    } else if (StableSuccess === true) {
-      toast("You bought jewcoin with stablecoins!");
-    } else if (ETHSuccess === true) {
-      toast("You bought jewcoin with ETH!");
-    }
-    setProgress(false);
-    refetch();
+    allownceAmountRefetch();
+    jewcoinBalanceRefetch();
   }, [approvedSuccess, StableSuccess, ETHSuccess]);
+
+  useEffect(() => {
+    allownceAmountRefetch();
+    jewcoinBalanceRefetch();
+    setChangeFlag(false);
+    setTokenAmount(0);
+  }, [flag]);
 
   useEffect(() => {
     if (
@@ -266,23 +255,25 @@ const Introduction = () => {
       StableLoading === true ||
       ETHLoading === true
     ) {
-      setProgress(true);
     }
+    allownceAmountRefetch();
   }, [approvedLoading, StableLoading, ETHLoading]);
 
   useEffect(() => {
     if (approvedError === true || StableError === true || ETHError === true) {
       setProgress(false);
+      toast.error("Your transaction is failed!", { autoClose: 5000 });
     }
   }, [approvedError, StableError, ETHError]);
 
   const onBuyAmountChangeHandler = (e) => {
     const inputValue = e.target.value;
-    if (/^\d*$/.test(inputValue)) {
-      // Update the state with the new value
-      setTokenAmount(inputValue);
-      refetch();
-    }
+    // if (/^\d*$/.test(inputValue)) {
+    // Update the state with the new value
+    setTokenAmount(inputValue);
+    allownceAmountRefetch();
+    jewcoinBalanceRefetch();
+    // }
 
     if (timeoutId) {
       clearTimeout(timeoutId);
@@ -320,44 +311,41 @@ const Introduction = () => {
       console.error(err);
     });
     const price = await api_call?.json();
-
-    // console.log(
-    //   ((amount * tokenPrice) / price?.ethereum.usd).toFixed(3),
-    //   "price of ethereum"
-    // );
     setNeededUSD(
       (
         (amount * tokenPrice) /
-        price["Realtime Currency Exchange Rate"]["5. Exchange Rate"]
-      ).toFixed(3)
+          price["Realtime Currency Exchange Rate"]["5. Exchange Rate"] +
+        0.0001
+      ).toFixed(4)
     );
   };
 
   useEffect(() => {
     if (selectedCrypto === "USDC" || selectedCrypto === "USDT") {
-      setNeededUSD((tokenAmount * tokenPrice).toFixed(2));
+      setNeededUSD((tokenAmount * tokenPrice).toFixed(3));
     } else if (selectedCrypto === "ETH") {
       getPriceETH(tokenAmount, tokenPrice);
     }
-    refetch();
+    allownceAmountRefetch();
+    jewcoinBalanceRefetch();
   }, [tokenAmount]);
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeLeft(calculateTimeLeft());
-    }, 1000);
+  // useEffect(() => {
+  //   const timer = setInterval(() => {
+  //     setTimeLeft(calculateTimeLeft());
+  //   }, 1000);
 
-    // Clear the interval when the component unmounts
-    return () => clearInterval(timer);
-  }, [1710289852000]);
+  //   // Clear the interval when the component unmounts
+  //   return () => clearInterval(timer);
+  // }, [1710289852000]);
 
-  useEffect(() => {
-    const intervalId = setInterval(
-      () => setIndex((index) => index + 1),
-      3000 // every 3 seconds
-    );
-    return () => clearTimeout(intervalId);
-  }, []);
+  // useEffect(() => {
+  //   const intervalId = setInterval(
+  //     () => setIndex((index) => index + 1),
+  //     3000 // every 3 seconds
+  //   );
+  //   return () => clearTimeout(intervalId);
+  // }, []);
   // <Canvas camera={{ position: [0, 0, -0.2], near: 0.025, zoom: 2.5 }}>
   //   <pointLight position={[0, 0, -0.2]} />
   //   <pointLight position={[0, -0.2, 0]} />
@@ -435,7 +423,7 @@ const Introduction = () => {
           }}
         >
           <p>Your JewCoin Balance: {balanceJew.toLocaleString()}</p>
-          <p>Current Jewcoin Price: {tokenPrice}$</p>
+          <p>Current Jewcoin Price: {tokenPrice.toFixed(2)}$</p>
           <div className="flex items-center justify-around">
             <p>Jewcoin</p>
             <div className={s.amountTokenInput}>
@@ -513,9 +501,17 @@ const Introduction = () => {
               </Menu>
             </div>
           </div>
+
           <p className="text-lg">
             If you want to buy {tokenAmount} jewcoin, you need {neededUSD}{" "}
             {selectedCrypto}
+            {selectedCrypto === "ETH"
+              ? ""
+              : `(you approved${" "}
+            ${
+              allownceAmount !== undefined ? formatUnits(allownceAmount, 6) : 0
+            }${" "}
+            ${selectedCrypto})`}
           </p>
           {selectedCrypto === "ETH" ? (
             <button className={s.buyBotton} onClick={buyWithEth}>

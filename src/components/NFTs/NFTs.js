@@ -1,8 +1,93 @@
 import { SvgStakingRightArrow } from "assets/svg";
 import s from "./NFTs.module.css";
 import NFTItem from "./NFTItem";
+import addressContract from "../../contracts/contractAddress.json";
+import JEWNFT from "../../contracts/abi/JEWNFT.json";
+import { formatEther, formatUnits } from "viem";
+
+import {
+  useAccount,
+  useBalance,
+  useContractRead,
+  usePrepareContractWrite,
+  useContractWrite,
+  useTransaction,
+  useWaitForTransaction,
+} from "wagmi";
+import web3 from "web3";
 
 const NFTS = () => {
+  //=========== Contract Config================
+  let contractConfig = {};
+  contractConfig = {
+    address: addressContract.addressNFT,
+    abi: JEWNFT,
+  };
+
+  //=========== Minted Suupply================
+  const { data: mintedSupplyfor50, refetch: mintedSupplyRefetchfor50 } =
+    useContractRead({
+      ...contractConfig,
+      functionName: "mintedSupply",
+      args: [web3.utils.toNumber(web3.utils.toWei(50, "ether"))],
+    });
+
+  //=========== Minted Suupply================
+  const { data: mintedSupplyfor60, refetch: mintedSupplyRefetchfor60 } =
+    useContractRead({
+      ...contractConfig,
+      functionName: "mintedSupply",
+      args: [web3.utils.toNumber(web3.utils.toWei(60, "ether"))],
+    });
+
+  //=========== Minted Suupply================
+  const { data: mintedSupplyfor75, refetch: mintedSupplyRefetchfor75 } =
+    useContractRead({
+      ...contractConfig,
+      functionName: "mintedSupply",
+      args: [web3.utils.toNumber(web3.utils.toWei(75, "ether"))],
+    });
+
+  //=========== Minted Suupply================
+  const { data: mintedSupplyfor100, refetch: mintedSupplyRefetchfor100 } =
+    useContractRead({
+      ...contractConfig,
+      functionName: "mintedSupply",
+      args: [web3.utils.toNumber(web3.utils.toWei(100, "ether"))],
+    });
+
+  //=========== Minted Suupply================
+  const { data: mintedSupplyfor150, refetch: mintedSupplyRefetchfor150 } =
+    useContractRead({
+      ...contractConfig,
+      functionName: "mintedSupply",
+      args: [web3.utils.toNumber(web3.utils.toWei(150, "ether"))],
+    });
+
+  //=========== Minted Suupply================
+  const { data: mintedSupplyfor200, refetch: mintedSupplyRefetchfor200 } =
+    useContractRead({
+      ...contractConfig,
+      functionName: "mintedSupply",
+      args: [web3.utils.toNumber(web3.utils.toWei(200, "ether"))],
+    });
+
+  //=========== Minted Suupply================
+  const { data: mintedSupplyfor350, refetch: mintedSupplyRefetchfor350 } =
+    useContractRead({
+      ...contractConfig,
+      functionName: "mintedSupply",
+      args: [web3.utils.toNumber(web3.utils.toWei(350, "ether"))],
+    });
+
+  //=========== Minted Suupply================
+  const { data: mintedSupplyfor250000, refetch: mintedSupplyRefetchforskin } =
+    useContractRead({
+      ...contractConfig,
+      functionName: "mintedSupply",
+      args: [web3.utils.toNumber(web3.utils.toWei(250000, "ether"))],
+    });
+
   return (
     <div className={s.root} id={"nft_panel"}>
       <div className="text-[30px] md:text-[40px] text-[#FFE300] font-bold font-sefer">
@@ -35,7 +120,12 @@ const NFTS = () => {
               "A yarmulke, also known as a kippah, is a small, round skullcap worn by Jewish men as a symbol of their religious faith and reverence for God. It is typically worn during prayer or other religious ceremonies, and it signifies a sense of humility and acknowledgment of a higher power. In some Jewish traditions, wearing a yarmulke is a customary practice, while in others, it may be reserved for specific occasions or locations, such as a synagogue or during religious rituals. The style and size of yarmulkes can vary, but they are generally small and worn at the top of the head"
             }
             nftId={2311}
-            supplyNft={"0 / 5000"}
+            mintedSupply={
+              mintedSupplyfor50 !== undefined
+                ? formatUnits(mintedSupplyfor50, 0)
+                : 0
+            }
+            totalSupply={5000}
             tokenAmount={50}
           />
         </div>
@@ -58,7 +148,12 @@ const NFTS = () => {
               "Matzah is unleavened flatbread that holds great significance in Jewish tradition, particularly during the festival of Passover (Pesach). Matzah is a central element of the Passover Seder, symbolizing the haste with which the Israelites left Egypt during the Exodus, as they did not have time for their bread to rise. Matzah is not only a symbol of historical events but also serves as a reminder of the Jewish people's journey from slavery to freedom. During Passover, it is a central element in the dietary observance of refraining from leavened products"
             }
             nftId={2321}
-            supplyNft={"0 / 2500"}
+            totalSupply={2500}
+            mintedSupply={
+              mintedSupplyfor60 !== undefined
+                ? formatUnits(mintedSupplyfor60, 0)
+                : 0
+            }
             tokenAmount={60}
           />
         </div>
@@ -82,7 +177,12 @@ const NFTS = () => {
               "Challah is a traditional Jewish bread that is typically eaten on the Sabbath and during Jewish holidays. It is a rich, sweet, and slightly eggy bread that holds cultural and religious significance in Jewish tradition. The braided shape of Challah is said to represent unity, love, and the intertwining of the Jewish people. Additionally, the sweetness of the bread symbolizes the sweetness of the Sabbath and other joyous occasions"
             }
             nftId={2301}
-            supplyNft={"0 / 1200"}
+            totalSupply={1200}
+            mintedSupply={
+              mintedSupplyfor75 !== undefined
+                ? formatUnits(mintedSupplyfor75, 0)
+                : 0
+            }
             tokenAmount={75}
           />
         </div>
@@ -106,7 +206,12 @@ const NFTS = () => {
               'A Kiddush cup is a ceremonial goblet used in Jewish religious rituals, particularly during the blessing over wine or grape juice. The term "Kiddush" refers to the sanctification or blessing recited on Shabbat (the Jewish Sabbath) and other Jewish holidays, marking the separation between the ordinary and the holy. During the Kiddush ceremony, the cup is filled with wine or grape juice, and the blessing is recited to sanctify the Sabbath or holiday. The head of the household or a designated individual then sips from the Kiddush cup, and often the contents are shared with others at the table'
             }
             nftId={2311}
-            supplyNft={"0 / 600"}
+            totalSupply={600}
+            mintedSupply={
+              mintedSupplyfor100 !== undefined
+                ? formatUnits(mintedSupplyfor100, 0)
+                : 0
+            }
             tokenAmount={100}
           />
         </div>
@@ -133,7 +238,12 @@ const NFTS = () => {
               "A Menorah is a traditional Jewish candelabrum that holds a central significance in the celebration of Hanukkah, also known as the Festival of Lights. During each night of Hanukkah, an additional candle is lit, starting with one on the first night and progressing to eight on the final night. The lighting of the candles commemorates the miracle of the oil that burned for eight days in the ancient Temple in Jerusalem, even though there was only enough oil for one day"
             }
             nftId={2341}
-            supplyNft={"0 / 500"}
+            totalSupply={500}
+            mintedSupply={
+              mintedSupplyfor150 !== undefined
+                ? formatUnits(mintedSupplyfor150, 0)
+                : 0
+            }
             tokenAmount={150}
           />
         </div>
@@ -144,17 +254,17 @@ const NFTS = () => {
         >
           <NFTItem
             name="Torah"
-            images={[
-              "assets/images/Torah/1.jpg",
-              "assets/images/Torah/2.jpg",
-              "assets/images/Torah/3.jpg",
-              "assets/images/Torah/4.jpg",
-            ]}
+            images={["assets/images/Torah/Torah.gif"]}
             description={
               "The Torah is the central and most important sacred text in Judaism. It refers to the first five books of the Hebrew Bible, also known as the Pentateuch or the Five Books of Moses. These books are Genesis, Exodus, Leviticus, Numbers, and Deuteronomy"
             }
             nftId={2341}
-            supplyNft={"0 / 350"}
+            totalSupply={350}
+            mintedSupply={
+              mintedSupplyfor200 !== undefined
+                ? formatUnits(mintedSupplyfor200, 0)
+                : 0
+            }
             tokenAmount={200}
           />
         </div>
@@ -169,7 +279,12 @@ const NFTS = () => {
               "A Dreidel is a spinning top that is often played with during Hanukkah, a Jewish holiday. It has four sides, each with a Hebrew letter on it. Players take turns spinning the dreidel and depending on which letter it lands on, they either win or lose game pieces"
             }
             nftId={2341}
-            supplyNft={"0 / 200"}
+            totalSupply={200}
+            mintedSupply={
+              mintedSupplyfor350 !== undefined
+                ? formatUnits(mintedSupplyfor350, 0)
+                : 0
+            }
             tokenAmount={350}
           />
         </div>
@@ -184,7 +299,12 @@ const NFTS = () => {
               "Are you a non-Jew who had his foreskin stolen when he was a vulnerable infant? It's time you got it back. Are you a Jew who never had the option to voluntarily give up your foreskin to make the covenant with your g-d authentic? Mint this NFT and then burn it to make it a proper sacrifice"
             }
             nftId={2341}
-            supplyNft={"0 / 10"}
+            totalSupply={10}
+            mintedSupply={
+              mintedSupplyfor250000 !== undefined
+                ? formatUnits(mintedSupplyfor250000, 0)
+                : 0
+            }
             tokenAmount={250000}
           />
         </div>
