@@ -22,7 +22,7 @@ import "@rainbow-me/rainbowkit/styles.css";
 // import { infuraProvider } from "@wagmi/core/providers/infura";
 
 const { chains, publicClient, webSocketPublicClient } = configureChains(
-  [mainnet, sepolia],
+  [sepolia],
   [
     infuraProvider({ apiKey: "6ed11913153a4847abaec3a4df8a42b5" }),
     // publicProvider(),
