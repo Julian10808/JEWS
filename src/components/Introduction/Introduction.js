@@ -30,32 +30,22 @@ const TEXTS = [
 const cryptosETH = stableTokens.cryptosETH;
 
 const Introduction = () => {
-  const calculateTimeLeft = () => {
+  function calculateTimeLeft() {
+    const targetDate = new Date('April 20, 2024 00:00:00').getTime();
     const now = new Date().getTime();
-    const difference = 1710289852000 - now;
+    const timeRemaining = targetDate - now;
 
-    if (difference <= 0) {
-      // Countdown has expired
-      return {
-        days: 0,
-        hours: 0,
-        minutes: 0,
-        seconds: 0,
-      };
+    if (timeRemaining <= 0) {
+      return { days: 0, hours: 0, minutes: 0, seconds: 0 };
     }
-    const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-    const hours = Math.floor(
-      (difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-    );
-    const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((difference % (1000 * 60)) / 1000);
-    return {
-      days,
-      hours,
-      minutes,
-      seconds,
-    };
-  };
+
+    const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+
+    return { days, hours, minutes, seconds };
+  }
   const [flag, setChangeFlag] = useState(false);
   const [index, setIndex] = useState(0);
   const [progress, setProgress] = useState(false);
@@ -330,6 +320,16 @@ const Introduction = () => {
     jewcoinBalanceRefetch();
   }, [tokenAmount]);
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTimeLeft(calculateTimeLeft());
+    }, 1000);
+
+   
+    return () => clearInterval(interval);
+  }, []); 
+
+
   // useEffect(() => {
   //   const timer = setInterval(() => {
   //     setTimeLeft(calculateTimeLeft());
@@ -366,7 +366,7 @@ const Introduction = () => {
     <div className={s.root} id="intro_panel">
       <div className={s.leftWrapper}>
         <div className="text-[16px] sm:text-[20px] text-white font-bold">
-          JEWCOIN TOKEN LAUNCH COUNTDOWN
+        Jewcoin Token Burn Countdown
         </div>
         <div className="text-[30px] md:text-[50px] text-[#FFE300] font-bold">
           {timeLeft.days} days : {timeLeft.hours} hrs: {timeLeft.minutes} mins :{" "}
@@ -377,7 +377,7 @@ const Introduction = () => {
           // style={{ color: "rgba(255, 255, 255, 0.50)" }}
         >
           Have you ever told yourself that you would have helped the Jews escape
-          the Holocaust? On March 8th, you'll have the chance to prove it.
+          the Holocaust? On March 29th, you'll have the chance to prove it.
         </div>
         <div
           className="w-full py-[18px] sm:pl-[24px] sm:pr-[40px] px-[14px] text-[12px] sm:text-[20px] text-[#FFE300] font-bold rounded-[10px] bg-[#010813]"
