@@ -16,6 +16,7 @@ import { toast } from "react-toastify";
 import addressContract from "../../contracts/contractAddress.json";
 import JEWNFT from "../../contracts/abi/JEWNFT.json";
 import Erc20Json from "../../contracts/abi/ERC20.json";
+import { readContract,waitForTransaction,writeContract } from '@wagmi/core'
 
 const Staking = () => {
   const { address, connector, isConnected } = useAccount();
@@ -26,15 +27,17 @@ const Staking = () => {
   const [curr, setCurr] = useState(0);
   const [name, setName] = useState("Yarmulke");
   const [balanceShekel, setBalanceShekel] = useState(0);
-  const [stakedPeriod, setStakedPeriod] = useState(0);
   const [stakedAmount, setStakedAmount] = useState(0);
   const [shekelAmountForBuy, setShekelAmountForBuy] = useState(0);
 
+  const [reward , setReward] = useState(0);
+  const [nextReward , setNextReward] = useState(0);
+
   const { data, refetch: shekelBalanceRefetch } = useBalance({
     address: address,
-    token: "0x4DFbb247f9A7277c5c2F900d5e86a6Ceb98e0f63",
+    token: addressContract.addressShekel,
   });
-  console.log(address, connector, isConnected, "wallet and user info=-=-=-==-");
+ 
   console.log(address, connector, isConnected, "wallet and user info=-=-=-==-");
 
   //=========== Contract Config================
@@ -152,101 +155,100 @@ const Staking = () => {
   });
 
   //=============stake jewcoin===========
-  const {
-    config: stakeConfig,
-    // error: stakeConfigError,
-    // isError: isStakeConfigError,
-  } = usePrepareContractWrite({
-    ...contractConfig,
-    functionName: "stake",
-    args: [
-      web3.utils.toNumber(web3.utils.toWei(stakedAmount, "ether")),
-      stakedPeriod,
-    ],
-  });
+  // const {
+  //   config: stakeConfig,
+  //   // error: stakeConfigError,
+  //   // isError: isStakeConfigError,
+  // } = usePrepareContractWrite({
+  //   ...contractConfig,
+  //   functionName: "stake",
+  //   args: [
+  //     web3.utils.toNumber(web3.utils.toWei(stakedAmount, "ether"))
+  //   ],
+  // });
 
-  const {
-    data: stakeConfigData,
-    write: stake,
-    // error: StakeConfigError,
-    isLoading: StakeLoading,
-    isSuccess: StakeSuccess,
-    isError: StakeError,
-  } = useContractWrite(stakeConfig);
+  // const {
+  //   data: stakeConfigData,
+  //   write: stake,
+  //   // error: StakeConfigError,
+  //   isLoading: StakeLoading,
+  //   isSuccess: StakeSuccess,
+  //   isError: StakeError,
+  // } = useContractWrite(stakeConfig);
 
-  const waitForStakeApproveTransaction = useWaitForTransaction({
-    hash: stakeConfigData?.hash,
-    onSuccess(data) {
-      setChangeFlag(true);
-      setStakeLoadingIcon(false);
-      toast.success("You staked the jewcoin successfully!", {
-        autoClose: 5000,
-      });
-    },
-  });
+  // const waitForStakeApproveTransaction = useWaitForTransaction({
+  //   hash: stakeConfigData?.hash,
+  //   onSuccess(data) {
+  //     setChangeFlag(true);
+  //     setStakeLoadingIcon(false);
+  //     toast.success("You staked the jewcoin successfully!", {
+  //       autoClose: 5000,
+  //     });
+  //   },
+  // });
 
-  //=============unstake jewcoin===========
-  const {
-    config: unStakeConfig,
-    // error: unstakeConfigError,
-    // isError: isUnStakeConfigError,
-  } = usePrepareContractWrite({
-    ...contractConfig,
-    functionName: "unStake",
-    args: [],
-  });
+  // //=============unstake jewcoin===========
+  // const {
+  //   config: unStakeConfig,
+  //   // error: unstakeConfigError,
+  //   // isError: isUnStakeConfigError,
+  // } = usePrepareContractWrite({
+  //   ...contractConfig,
+  //   functionName: "unStake",
+  //   args: [],
+  // });
 
-  const {
-    data: unStakeConfigData,
-    write: unStake,
-    // error: UnStakeConfigError,
-    isLoading: UnStakeLoading,
-    isSuccess: UnStakeSuccess,
-    isError: UnStakeError,
-  } = useContractWrite(unStakeConfig);
+  // const {
+  //   data: unStakeConfigData,
+  //   write: unStake,
+  //   // error: UnStakeConfigError,
+  //   isLoading: UnStakeLoading,
+  //   isSuccess: UnStakeSuccess,
+  //   isError: UnStakeError,
+  // } = useContractWrite(unStakeConfig);
 
-  const waitForUnStakeApproveTransaction = useWaitForTransaction({
-    hash: unStakeConfigData?.hash,
-    onSuccess(data) {
-      setChangeFlag(true);
-      setStakeLoadingIcon(false);
-      toast.success("You unstaked the jewcoin successfully!", {
-        autoClose: 5000,
-      });
-    },
-  });
+  // const waitForUnStakeApproveTransaction = useWaitForTransaction({
+  //   hash: unStakeConfigData?.hash,
+  //   onSuccess(data) {
+  //     setChangeFlag(true);
+  //     setStakeLoadingIcon(false);
+  //     toast.success("You unstaked the jewcoin successfully!", {
+  //       autoClose: 5000,
+  //     });
+  //   },
+  // });
 
-  //=============claim shekel token===========
-  const {
-    config: claimConfig,
-    // error: claimConfigError,
-    // isError: isClaimConfigError,
-  } = usePrepareContractWrite({
-    ...contractConfig,
-    functionName: "claim",
-    args: [],
-  });
+  // //=============claim shekel token===========
+  // const {
+  //   config: claimConfig,
+  //   // error: claimConfigError,
+  //   // isError: isClaimConfigError,
+  // } = usePrepareContractWrite({
+  //   ...contractConfig,
+  //   functionName: "claim",
+  //   args: [],
+  // });
 
-  const {
-    data: claimConfigData,
-    write: claim,
-    // error: ClaimConfigError,
-    isLoading: ClaimLoading,
-    isSuccess: ClaimSuccess,
-    isError: ClaimError,
-  } = useContractWrite(claimConfig);
+  // const {
+  //   data: claimConfigData,
+  //   write: claim,
+  //   // error: ClaimConfigError,
+  //   isLoading: ClaimLoading,
+  //   isSuccess: ClaimSuccess,
+  //   isError: ClaimError,
+  // } = useContractWrite(claimConfig);
 
-  const waitForClaimApproveTransaction = useWaitForTransaction({
-    hash: claimConfigData?.hash,
-    onSuccess(data) {
-      setChangeFlag(true);
-      setStakeLoadingIcon(false);
-      toast.success(
-        "You claimed the jewcoin and shekel for reward successfully!",
-        { autoClose: 5000 }
-      );
-    },
-  });
+  // const waitForClaimApproveTransaction = useWaitForTransaction({
+  //   hash: claimConfigData?.hash,
+  //   onSuccess(data) {
+  //     setChangeFlag(true);
+  //     setStakeLoadingIcon(false);
+  //     toast.success(
+  //       "You claimed the jewcoin and shekel for reward successfully!",
+  //       { autoClose: 5000 }
+  //     );
+  //   },
+  // });
 
   //=============Buy NFT===========
   const {
@@ -304,22 +306,71 @@ const Staking = () => {
   };
 
   const onStake = async () => {
+   
     if (isConnected === true) {
-      await stake();
+    try{  
       setStakeLoadingIcon(true);
-    } else {
-      toast.warn(
-        "Your wallet is disconnected!After disconnect, plz connect again!",
-        { autoClose: 5000 }
-      );
+      const stake = await writeContract({
+        address: addressContract.addressNFT,
+        abi: JEWNFT,
+        functionName: "stake",
+        args: [
+          web3.utils.toNumber(web3.utils.toWei(stakedAmount, "ether"))
+        ],
+        
+      })
+      console.log('aaa',stake)
+      const tx = await waitForTransaction({hash: stake.hash});
+      if(tx){
+        setChangeFlag(true);
+      setStakeLoadingIcon(false);
+      toast.success("You staked the jewcoin successfully!", {
+        autoClose: 5000,
+      });
+      
+      }
+    }catch(e){
+      setStakeLoadingIcon(false);
+      setBuyNFTLoadingIcon(false);
+      toast.error("Your transaction is failed!", { autoClose: 5000 });
     }
+  }else {
+    toast.warn(
+      "Your wallet is disconnected!After disconnect, plz connect again!",
+      { autoClose: 5000 }
+    );
+  }
   };
 
   const onClaim = async () => {
+    
     if (isConnected === true) {
-      await claim();
-      setStakeLoadingIcon(true);
-    } else {
+      try{  
+        setStakeLoadingIcon(true);
+        const claim = await writeContract({
+          address: addressContract.addressNFT,
+          abi: JEWNFT,
+          functionName: "claim",
+          args: [],
+          
+        })
+        console.log('aaa',claim)
+        const tx = await waitForTransaction({hash: claim.hash});
+        if(tx){
+          setChangeFlag(true);
+          setStakeLoadingIcon(false);
+          toast.success(
+          "You claimed the jewcoin and shekel for reward successfully!",
+          { autoClose: 5000 }
+        );
+        
+        }
+      }catch(e){
+        setStakeLoadingIcon(false);
+        setBuyNFTLoadingIcon(false);
+        toast.error("Your transaction is failed!", { autoClose: 5000 });
+      }
+    }else {
       toast.warn(
         "Your wallet is disconnected!After disconnect, plz connect again!",
         { autoClose: 5000 }
@@ -329,9 +380,31 @@ const Staking = () => {
 
   const onUnStake = async () => {
     if (isConnected === true) {
-      await unStake();
-      setStakeLoadingIcon(true);
-    } else {
+      try{  
+        setStakeLoadingIcon(true);
+        const unStake = await writeContract({
+          address: addressContract.addressNFT,
+          abi: JEWNFT,
+          functionName: "unStake",
+          args: [],
+          
+        })
+        console.log('aaa',unStake)
+        const tx = await waitForTransaction({hash: unStake.hash});
+        if(tx){
+          setChangeFlag(true);
+          setStakeLoadingIcon(false);
+          toast.success("You unstaked the jewcoin successfully!", {
+            autoClose: 5000,
+          });
+        
+        }
+      }catch(e){
+        setStakeLoadingIcon(false);
+        setBuyNFTLoadingIcon(false);
+        toast.error("Your transaction is failed!", { autoClose: 5000 });
+      }
+    }else {
       toast.warn(
         "Your wallet is disconnected!After disconnect, plz connect again!",
         { autoClose: 5000 }
@@ -350,6 +423,41 @@ const Staking = () => {
       );
     }
   };
+
+  useEffect(() => {
+    const GetReward = async () => {
+      if (isConnected === true && isStakedStatues?.[0] === true) {
+        const rewardQuery = await readContract({
+          address: addressContract.addressNFT,
+          abi: JEWNFT,
+          functionName: 'calcAmount',
+          args: [address],
+        });
+
+        const NextrewardQuery = await readContract({
+          address: addressContract.addressNFT,
+          abi: JEWNFT,
+          functionName: 'calcFutureReward',
+          args: [address],
+        });
+        setReward((web3.utils.fromWei(rewardQuery, 'wei')) /10 ** 18);
+        setNextReward((web3.utils.fromWei(NextrewardQuery, 'wei')) /10 ** 18)
+      }
+    }
+
+    // Call GetReward immediately when component mounts
+    GetReward();
+
+    // Set up a timer to call GetReward every 30 minutes
+    const intervalId = setInterval(() => {
+      GetReward();
+    }, 30 * 60 * 1000); // 30 minutes in milliseconds
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [isConnected, isStakedStatues]);
+
 
   const images = [
     {
@@ -427,7 +535,6 @@ const Staking = () => {
     const inputValue = e.target.value;
     if (/^\d*$/.test(inputValue)) {
       // Update the state with the new value
-      setStakedPeriod(inputValue);
     }
   };
 
@@ -445,16 +552,13 @@ const Staking = () => {
     allownceShekelAmountRefetch();
     setChangeFlag(false);
     setStakedAmount(0);
-    setStakedPeriod(0);
+
   }, [flag]);
 
   useEffect(() => {
     if (
       ApprovedJewError === true ||
       ApproveShekelError === true ||
-      StakeError === true ||
-      ClaimError === true ||
-      UnStakeError === true ||
       BuyNFTError === true
     ) {
       setStakeLoadingIcon(false);
@@ -464,9 +568,6 @@ const Staking = () => {
   }, [
     ApprovedJewError,
     ApproveShekelError,
-    StakeError,
-    ClaimError,
-    UnStakeError,
     BuyNFTError,
   ]);
 
@@ -475,6 +576,7 @@ const Staking = () => {
       setBalanceShekel(data?.formatted);
     } else setBalanceShekel(0);
   }, [data]);
+
 
   return (
     <div className={s.root} id="staking_panel">
@@ -556,7 +658,7 @@ const Staking = () => {
                 />
               </div>
             </div>
-            <div className="flex items-center justify-between">
+            {/* <div className="flex items-center justify-between">
               <div className="text-[14px] lg:text-[16px] font-bold text-[#ffe300]">
                 Locked Period:
               </div>
@@ -565,15 +667,17 @@ const Staking = () => {
                   className="outline-none w-full"
                   placeholder="days"
                   type="number"
-                  value={stakedPeriod}
+                  // value={}
                   onChange={onDateChangeHandler}
                 />
               </div>
-            </div>
+            </div> */}
 
-            <div className="text-[14px] text-center lg:text-[16px] font-bold text-[#ffe300]">
-              you'll earn {(stakedAmount * stakedPeriod) / 10} shekel tokens
-              after {stakedPeriod} days
+            <div className="text-[14px] text-center lg:text-[16px] font-bold text-[#ffe300] mt-1">
+              You have earned {reward} shekel tokens
+            </div>
+            <div className="text-[14px] text-center lg:text-[16px] font-bold text-[#ffe300] mt-1">
+              After 24 hours it will {nextReward} shekel tokens
             </div>
           </div>
           {/* {allownceJewAmount >=

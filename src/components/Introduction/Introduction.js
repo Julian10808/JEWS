@@ -20,6 +20,7 @@ import {
   useTransaction,
   useWaitForTransaction,
 } from "wagmi";
+import { readContract,waitForTransaction,writeContract } from '@wagmi/core'
 
 const TEXTS = [
   "Created by Jews, Made for everyone",
@@ -64,7 +65,7 @@ const Introduction = () => {
   const { address, connector, isConnected } = useAccount();
   const { data: balJewData, refetch: jewcoinBalanceRefetch } = useBalance({
     address: address,
-    token: "0xE9959c7a1Cf7891Cac0bE4b2c835E723Db68a474",
+    token: addressContract.addressJew,
   });
   console.log(address, connector, isConnected, "wallet and user info=-=-=-==-");
 
@@ -128,109 +129,159 @@ const Introduction = () => {
   });
 
   //=============buy stable token===========
-  const {
-    config: buyStableConfig,
-    // error: buyStableConfigError,
-    // isError: isBuyStableConfigError,
-  } = usePrepareContractWrite({
-    ...contractConfig,
-    functionName: "buyTokenByStable",
-    args: [
-      selectedCryptoAddress,
-      web3.utils.toNumber(web3.utils.toWei(tokenAmount, "ether")),
-    ],
-  });
+  // const {
+  //   config: buyStableConfig,
+  //   // error: buyStableConfigError,
+  //   // isError: isBuyStableConfigError,
+  // } = usePrepareContractWrite({
+  //   ...contractConfig,
+  //   functionName: "buyTokenByStable",
+  //   args: [
+  //     selectedCryptoAddress,
+  //     web3.utils.toNumber(web3.utils.toWei(tokenAmount, "ether")),
+  //   ],
+  // });
 
-  const {
-    data: buyStableConfigData,
-    write: buyTokenByStable,
-    // error: BuyStableConfigError,
-    isLoading: StableLoading,
-    isSuccess: StableSuccess,
-    isError: StableError,
-  } = useContractWrite(buyStableConfig);
+  // const {
+  //   data: buyStableConfigData,
+  //   write: buyTokenByStable,
+  //   // error: BuyStableConfigError,
+  //   isLoading: StableLoading,
+  //   isSuccess: StableSuccess,
+  //   isError: StableError,
+  // } = useContractWrite(buyStableConfig);
 
-  const waitForBuyTransaction = useWaitForTransaction({
-    hash: buyStableConfigData?.hash,
-    onSuccess(data) {
-      setChangeFlag(true);
-      toast.success("You bought jewcoin with stablecoins!", {
-        autoClose: 5000,
-      });
-      setProgress(false);
-    },
-  });
+  // const waitForBuyTransaction = useWaitForTransaction({
+  //   hash: buyStableConfigData?.hash,
+  //   onSuccess(data) {
+  //     setChangeFlag(true);
+  //     toast.success("You bought jewcoin with stablecoins!", {
+  //       autoClose: 5000,
+  //     });
+  //     setProgress(false);
+  //   },
+  // });
 
   //=============buy ETH===========
-  const {
-    config: buyETHConfig,
-    // error: buyETHConfigError,
-    // isError: isBuyETHConfigError,
-  } = usePrepareContractWrite({
-    ...contractConfig,
-    functionName: "buyTokenByETH",
-    value: web3.utils.toNumber(web3.utils.toWei(neededUSD, "ether")),
-    args: [web3.utils.toNumber(web3.utils.toWei(tokenAmount, "ether"))],
-  });
+  // const {
+  //   config: buyETHConfig,
+  //   // error: buyETHConfigError,
+  //   isError: isBuyETHConfigError,
+  // } = usePrepareContractWrite({
+  //   ...contractConfig,
+  //   functionName: "buyTokenByETH",
+  //   value: web3.utils.toNumber(web3.utils.toWei(neededUSD, "ether")),
+  //   args: [web3.utils.toNumber(web3.utils.toWei(tokenAmount, "ether"))],
+  // });
 
-  const {
-    data: buyETHConfigData,
-    write: buyTokenByETH,
-    // error: BuyETHConfigError,
-    isLoading: ETHLoading,
-    isSuccess: ETHSuccess,
-    isError: ETHError,
-  } = useContractWrite(buyETHConfig);
+  // const {
+  //   data: buyETHConfigData,
+  //   write: buyTokenByETH,
+  //   // error: BuyETHConfigError,
+  //   isLoading: ETHLoading,
+  //   isSuccess: ETHSuccess,
+  //   isError: ETHError,
+  // } = useContractWrite(buyETHConfig);
 
-  const waitForETHTransaction = useWaitForTransaction({
-    hash: buyETHConfigData?.hash,
-    onSuccess(data) {
-      setChangeFlag(true);
-      toast.success("You bought jewcoin with ETH!", { autoClose: 5000 });
-      setProgress(false);
-    },
-  });
+  // const waitForETHTransaction = useWaitForTransaction({
+  //   hash: buyETHConfigData?.hash,
+  //   onSuccess(data) {
+  //     setChangeFlag(true);
+  //     toast.success("You bought jewcoin with ETH!", { autoClose: 5000 });
+  //     setProgress(false);
+  //   },
+  // });
 
   const buyWithStable = async () => {
+    setProgress(true);
     if (isConnected === true) {
-      await buyTokenByStable();
-      setProgress(true);
-    } else {
+      //await buyTokenByStable();
+      try{  
+        const buyTokenStabe = await writeContract({
+          address: addressContract.addressNFT,
+          abi: JEWNFT,
+          functionName: "buyTokenByStable",
+          args: [
+            selectedCryptoAddress,
+            web3.utils.toNumber(web3.utils.toWei(tokenAmount, "ether")),
+          ],
+          
+        })
+        console.log('aaa',buyTokenStabe)
+        const tx = await waitForTransaction({hash: buyTokenStabe.hash});
+        if(tx){
+          setChangeFlag(true);
+          toast.success("You bought jewcoin with stablecoins!", {
+            autoClose: 5000,
+          });
+          setProgress(false);
+        
+        }
+      }catch(e){
+        setProgress(false);
+        toast.error("Your transaction is failed!", { autoClose: 5000 });
+      }
+      } else {
       toast.warn(
         "Your wallet is disconnected!After disconnect, plz connect again!",
         { autoClose: 5000 }
       );
+      setProgress(false);
     }
   };
 
   const buyWithEth = async () => {
+    setProgress(true);
     if (isConnected === true) {
-      await buyTokenByETH();
-      setProgress(true);
-    } else {
+      //await buyTokenByStable();
+      try{  
+        const buyTokenEth = await writeContract({
+          address: addressContract.addressNFT,
+          abi: JEWNFT,
+          functionName: "buyTokenByETH",
+          value: web3.utils.toNumber(web3.utils.toWei(neededUSD, "ether")),
+          args: [web3.utils.toNumber(web3.utils.toWei(tokenAmount, "ether"))],
+          
+        })
+        console.log('aaa',buyTokenEth)
+        const tx = await waitForTransaction({hash: buyTokenEth.hash});
+        if(tx){
+          setChangeFlag(true);
+          toast.success("You bought jewcoin with Eth!", {
+            autoClose: 5000,
+          });
+          setProgress(false);
+        
+        }
+      }catch(e){
+        setProgress(false);
+        toast.error("Your transaction is failed!", { autoClose: 5000 });
+      }
+      } else {
       toast.warn(
         "Your wallet is disconnected!After disconnect, plz connect again!",
         { autoClose: 5000 }
       );
+      setProgress(false);
     }
   };
 
   const approveStable = async () => {
-    if (isConnected === true) {
-      await approve();
-      setProgress(true);
+      if (isConnected === true) {
+        await approve();
     } else {
       toast.warn(
         "Your wallet is disconnected!After disconnect, plz connect again!",
         { autoClose: 5000 }
       );
     }
+
   };
 
   useEffect(() => {
     allownceAmountRefetch();
     jewcoinBalanceRefetch();
-  }, [approvedSuccess, StableSuccess, ETHSuccess]);
+  }, [approvedSuccess]);
 
   useEffect(() => {
     allownceAmountRefetch();
@@ -241,20 +292,18 @@ const Introduction = () => {
 
   useEffect(() => {
     if (
-      approvedLoading === true ||
-      StableLoading === true ||
-      ETHLoading === true
+      approvedLoading === true 
     ) {
     }
     allownceAmountRefetch();
-  }, [approvedLoading, StableLoading, ETHLoading]);
+  }, [approvedLoading]);
 
   useEffect(() => {
-    if (approvedError === true || StableError === true || ETHError === true) {
+    if (approvedError === true) {
       setProgress(false);
       toast.error("Your transaction is failed!", { autoClose: 5000 });
     }
-  }, [approvedError, StableError, ETHError]);
+  }, [approvedError]);
 
   const onBuyAmountChangeHandler = (e) => {
     const inputValue = e.target.value;
@@ -263,7 +312,7 @@ const Introduction = () => {
     setTokenAmount(inputValue);
     allownceAmountRefetch();
     jewcoinBalanceRefetch();
-    // }
+     //}
 
     if (timeoutId) {
       clearTimeout(timeoutId);
@@ -284,6 +333,7 @@ const Introduction = () => {
     // Save the timeout ID in the state
     setTimeoutId(newTimeoutId);
   };
+
 
   const getPriceETH = async (amount, tokenPrice) => {
     const api_call = await fetch(
