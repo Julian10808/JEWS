@@ -32,6 +32,7 @@ const Staking = () => {
 
   const [reward , setReward] = useState(0);
   const [nextReward , setNextReward] = useState(0);
+  const [remainingTime, setRemainingTime] = useState(24 * 60 * 60); 
 
   const { data, refetch: shekelBalanceRefetch } = useBalance({
     address: address,
@@ -426,6 +427,7 @@ const Staking = () => {
 
   useEffect(() => {
     const GetReward = async () => {
+      console.log(">>>>>>>BAL",isStakedStatues?.[1]);
       if (isConnected === true && isStakedStatues?.[0] === true) {
         const rewardQuery = await readContract({
           address: addressContract.addressNFT,
@@ -444,6 +446,7 @@ const Staking = () => {
         setNextReward((web3.utils.fromWei(NextrewardQuery, 'wei')) /10 ** 18)
       }
     }
+    
 
     // Call GetReward immediately when component mounts
     GetReward();
@@ -553,6 +556,8 @@ const Staking = () => {
     setChangeFlag(false);
     setStakedAmount(0);
 
+    console.log("bal>>>>",isStakedStatues);
+
   }, [flag]);
 
   useEffect(() => {
@@ -576,6 +581,25 @@ const Staking = () => {
       setBalanceShekel(data?.formatted);
     } else setBalanceShekel(0);
   }, [data]);
+
+  useEffect(() => {
+    if (isStakedStatues?.[0] == true) {
+      console.log(">>> time",web3.utils.toNumber(isStakedStatues?.[2].toString()));
+     const calculateTime = async () => {
+        console.log("setting time")
+        const currentTime = Math.floor(Date.now() / 1000); // Current time in UNIX format
+        const elapsedTime = currentTime -  web3.utils.toNumber(isStakedStatues?.[2].toString());
+        const timeUntilNextReward = 24 * 60 * 60 - (elapsedTime % (24 * 60 * 60));
+        setRemainingTime(Math.floor(timeUntilNextReward/3600));
+     }
+     calculateTime();
+      const interval = setInterval(() => {
+          calculateTime();
+      }, 3600000); // Update every hour (3600 * 1000 milliseconds)
+
+      return () => clearInterval(interval);
+    }
+  }, [isConnected,isStakedStatues]);
 
 
   return (
@@ -640,50 +664,39 @@ const Staking = () => {
           className="relative  w-full font-bold h-full  flex-col ms:flex-row items-center justify-center gap-[20px] bg-[#FFE300] rounded-[20px] px-[20px] xl:px-[25px] lg:px-[12px] sm:px-[32px] py-[30px]  mb-[20px]"
           style={{ boxShadow: "4px 3px 13px 0px #FFE300" }}
         >
-          <div
-            className="relative h-[50%] justify-between flex flex-col w-full rounded-[10px] bg-[#7659AD] mb-[10px] px-[14px] py-[8px] "
-            style={{ boxShadow: "0px 4px 10px 0px rgba(0, 0, 0, 0.25)" }}
-          >
-            <div className="flex items-center justify-between">
-              <div className="text-[14px] lg:text-[16px] font-bold text-[#ffe300]">
-                Jewcoin Amount:
-              </div>
-              <div className={s.amountTokenInput}>
-                <input
-                  className="outline-none w-full"
-                  placeholder="Amount"
-                  type="number"
-                  value={stakedAmount}
-                  onChange={onAmountChangeHandler}
-                />
-              </div>
-            </div>
-            {/* <div className="flex items-center justify-between">
-              <div className="text-[14px] lg:text-[16px] font-bold text-[#ffe300]">
-                Locked Period:
-              </div>
-              <div className={s.periodInput}>
-                <input
-                  className="outline-none w-full"
-                  placeholder="days"
-                  type="number"
-                  // value={}
-                  onChange={onDateChangeHandler}
-                />
-              </div>
-            </div> */}
+        <div className="relative grid grid-cols-1 lg:grid-row gap-4 w-full rounded-lg bg-purple-700 shadow-md p-4 mb-4 align-middle">
+  <div className="col-span-1">
+    {isStakedStatues?.[0] ? (
+      <>
+        <div className="text-lg font-bold text-yellow-400">Staked Jew Amount:</div>
+        <div className="bg-yellow-400 text-lg font-bold rounded-lg p-2">{(isStakedStatues?.[1].toString()) / 10 ** 18}</div>
+      </>
+    ) : (
+      <>
+        <div className="text-lg font-bold text-yellow-400">Jewcoin Amount:</div>
+        <div className="amountTokenInput">
+          <input
+            className="outline-none w-full bg-transparent text-lg text-yellow-400 placeholder-yellow-400"
+            placeholder="Amount"
+            type="number"
+            value={stakedAmount}
+            onChange={onAmountChangeHandler}
+          />
+        </div>
+      </>
+    )}
+  </div>
+  <div className="col-span-1 mx-auto">
+    <div className="text-lg font-bold text-yellow-400">You have earned {reward} SHEKEL</div>
+    <div className="text-lg font-bold text-yellow-400">After {remainingTime} hours you will earn {nextReward - reward} SHEKEL</div>
+  </div>
+</div>
 
-            <div className="text-[14px] text-center lg:text-[16px] font-bold text-[#ffe300] mt-1">
-              You have earned {reward} shekel tokens
-            </div>
-            <div className="text-[14px] text-center lg:text-[16px] font-bold text-[#ffe300] mt-1">
-              After 24 hours it will {nextReward} shekel tokens
-            </div>
-          </div>
+
           {/* {allownceJewAmount >=
             web3.utils.toNumber(web3.utils.toWei(stakedAmount, "ether"))} */}
           {isStakedStatues?.[0] ? (
-            isClaim ? (
+            reward > 0? (
               <button
                 className="h-[50px] w-full text-[white] text-[24px] font-bold bg-[#7659AD] rounded-[10px] h-[20%]"
                 onClick={onClaim}
@@ -704,7 +717,7 @@ const Staking = () => {
                 className="h-[50px] w-full text-[white] text-[24px] font-bold bg-[#7659AD] rounded-[10px] h-[20%]"
                 onClick={onUnStake}
               >
-                Unstake ({formatUnits(isStakedStatues?.[1], 18)} staked)
+                Unstake
                 {stakeLoadingIcon === true ? (
                   <CircularProgress
                     className="text-[18px]"
