@@ -32,7 +32,7 @@ const Staking = () => {
 
   const [reward , setReward] = useState(0);
   const [nextReward , setNextReward] = useState(0);
-  const [remainingTime, setRemainingTime] = useState(24 * 60 * 60); 
+  const [remainingTime, setRemainingTime] = useState(0); 
 
   const { data, refetch: shekelBalanceRefetch } = useBalance({
     address: address,
@@ -583,7 +583,7 @@ const Staking = () => {
   }, [data]);
 
   useEffect(() => {
-    if (isStakedStatues?.[0] == true) {
+    if (isStakedStatues?.[0] === true) {
       console.log(">>> time",web3.utils.toNumber(isStakedStatues?.[2].toString()));
      const calculateTime = async () => {
         console.log("setting time")
@@ -674,7 +674,7 @@ const Staking = () => {
     ) : (
       <>
         <div className="text-lg font-bold text-yellow-400">Jewcoin Amount:</div>
-        <div className="amountTokenInput">
+        <div className={s.amountTokenInput}>
           <input
             className="outline-none w-full bg-transparent text-lg text-yellow-400 placeholder-yellow-400"
             placeholder="Amount"
@@ -688,7 +688,7 @@ const Staking = () => {
   </div>
   <div className="col-span-1 mx-auto">
     <div className="text-lg font-bold text-yellow-400">You have earned {reward} SHEKEL</div>
-    <div className="text-lg font-bold text-yellow-400">After {remainingTime} hours you will earn {nextReward - reward} SHEKEL</div>
+    <div className="text-lg font-bold text-yellow-400">After {remainingTime + 1} hours you will earn {nextReward - reward} SHEKEL</div>
   </div>
 </div>
 
