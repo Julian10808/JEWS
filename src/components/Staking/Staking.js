@@ -561,6 +561,17 @@ const Staking = () => {
   }, [flag]);
 
   useEffect(() => {
+    isStakedStatuesRefetch();
+    shekelBalanceRefetch();
+    isClaimRefetch();
+    allownceJewAmountRefetch();
+    allownceShekelAmountRefetch();
+
+    console.log("bal>>>>",isStakedStatues);
+
+  }, []);
+
+  useEffect(() => {
     if (
       ApprovedJewError === true ||
       ApproveShekelError === true ||
