@@ -3,6 +3,7 @@ import s from "./NFTs.module.css";
 import NFTItem from "./NFTItem";
 import addressContract from "../../contracts/contractAddress.json";
 import JEWNFT from "../../contracts/abi/JEWNFT.json";
+import JewCOllection from '../../contracts/abi/JewCollection.json';
 import { formatEther, formatUnits } from "viem";
 
 import {
@@ -15,13 +16,15 @@ import {
   useWaitForTransaction,
 } from "wagmi";
 import web3 from "web3";
+import { useEffect } from "react";
 
 const NFTS = () => {
+  const { address, connector, isConnected } = useAccount();
   //=========== Contract Config================
   let contractConfig = {};
   contractConfig = {
-    address: addressContract.addressNFT,
-    abi: JEWNFT,
+    address: addressContract.addressJewCollection,
+    abi: JewCOllection,
   };
 
   //=========== Minted Suupply================
@@ -87,6 +90,37 @@ const NFTS = () => {
       functionName: "mintedSupply",
       args: [web3.utils.toNumber(web3.utils.toWei(250000, "ether"))],
     });
+
+    useEffect(() => {
+      const GetReward = async () => {
+        if(isConnected) {
+          mintedSupplyRefetchfor50();
+          mintedSupplyRefetchfor60();
+          mintedSupplyRefetchfor75();
+          mintedSupplyRefetchfor100();
+          mintedSupplyRefetchfor150();
+          mintedSupplyRefetchfor200();
+          mintedSupplyRefetchfor350();
+          mintedSupplyRefetchforskin();
+        }
+        
+        }
+      
+      
+  
+      // Call GetReward immediately when component mounts
+      GetReward();
+  
+      // Set up a timer to call GetReward every 30 minutes
+      const intervalId = setInterval(() => {
+        GetReward();
+      }, 30 * 1000); // 30 seconds in milliseconds
+  
+      return () => {
+        clearInterval(intervalId);
+      };
+    }, [isConnected]);
+
 
   return (
     <div className={s.root} id={"nft_panel"}>

@@ -17,6 +17,7 @@
 		"@testing-library/user-event": "^13.5.0",
 		"@wagmi/core": "^1.4.13",
 		"classnames": "^2.3.2",
+		"dotenv": "^16.4.5",
 		"install": "^0.13.0",
 		"leva": "^0.9.35",
 		"npm": "^9.5.0",

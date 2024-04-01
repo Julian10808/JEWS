@@ -402,6 +402,19 @@
   },
   {
     "inputs": [],
+    "name": "isInitialized",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "jewAddress",
     "outputs": [
       {
@@ -484,6 +497,19 @@
       }
     ],
     "name": "setAcceptedTokens",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bool",
+        "name": "_init",
+        "type": "bool"
+      }
+    ],
+    "name": "setBuyInitialize",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

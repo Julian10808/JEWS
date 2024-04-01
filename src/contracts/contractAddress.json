@@ -1,8 +1,9 @@
 {
-    "addressNFT": "0x8539F56508e743F99A0f7ADd387d7B162AAE5d3f",
+    "addressNFT": "0x43B89f9150994C835c41931B81917eDCb1009aFC",
     "addressJew": "0xc1964dcb80ea650fb646e7428a9040ebd6998d91",
     "addressShekel": "0xd5236e3a78177113f13e91ba5881f197cf0c0569",
     "addressSkin": "0xbc68f58d9fea729f164554faa18f61e2f9ae0de9",
     "addressUsdt": "0x344BE2580Cc5caC8709BF6c7743792a6d5674a19",
-    "addressUsdc": "0xade5a2FD277Ae81419f9fFe51c09e23e98687ff4"
+    "addressUsdc": "0xade5a2FD277Ae81419f9fFe51c09e23e98687ff4",
+    "addressJewCollection": "0xA861877f22214C2337e43b1111F6A029355A3a17"
   }

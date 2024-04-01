@@ -16,6 +16,7 @@ import { toast } from "react-toastify";
 import addressContract from "../../contracts/contractAddress.json";
 import JEWNFT from "../../contracts/abi/JEWNFT.json";
 import Erc20Json from "../../contracts/abi/ERC20.json";
+import JewCollection from "../../contracts/abi/JewCollection.json";
 import { readContract,waitForTransaction,writeContract } from '@wagmi/core'
 
 const Staking = () => {
@@ -33,6 +34,68 @@ const Staking = () => {
   const [reward , setReward] = useState(0);
   const [nextReward , setNextReward] = useState(0);
   const [remainingTime, setRemainingTime] = useState(0); 
+  
+  const imagesMenorah = [
+    "https://pink-acceptable-heron-641.mypinata.cloud/ipfs/QmSWNpJuafSx1CkYrn1xEkJYjWzwi2tQmk6MmryRXfde9k",
+    "https://pink-acceptable-heron-641.mypinata.cloud/ipfs/QmbtvUaBUAmsJ3inuH19NvNqBxbQMPADzRfJJzKzmf644e",
+    "https://pink-acceptable-heron-641.mypinata.cloud/ipfs/Qma4fdWDWvuyUDauppfzjNNtywvKZVVpxxH8dqVbDZ5eqF",
+    "https://pink-acceptable-heron-641.mypinata.cloud/ipfs/QmX2zVrRD837wTJUHuoHKc1xiGc1VuMBP7nAaoKryKohht",
+    "https://pink-acceptable-heron-641.mypinata.cloud/ipfs/QmdRpRqz1nc5DQxdAx4YnoCE311TRyF8GJH5ZwbDpK4f4h",
+    "https://pink-acceptable-heron-641.mypinata.cloud/ipfs/QmNjFrycMKw3bTimc1aGVSZGg7t1tDhF25kXS1ArM2JPWz",
+    "https://pink-acceptable-heron-641.mypinata.cloud/ipfs/QmcJbjh7uWRiZjAHEoitSniYRUAqnYSeQmhBiZan1LZj1D",
+    "https://pink-acceptable-heron-641.mypinata.cloud/ipfs/QmXv4rqLe5ZYmnLUvYs2pCM9tCyk7ytSPWmN8v17AmuCGp",
+    "https://pink-acceptable-heron-641.mypinata.cloud/ipfs/QmcDgfFVYNhF8HVpXDVRrVLEJPSLNDzGPBhpiF8wduhW1Q",
+    "https://pink-acceptable-heron-641.mypinata.cloud/ipfs/QmW7oZu8pNT4cZxPjwFi4WAz7nwG3wiGUfhAcakj39ocoJ"
+]
+
+const imagesKiddish = [
+    "https://pink-acceptable-heron-641.mypinata.cloud/ipfs/QmYH11j9yBRd4prYMa1zRTNoSjtgabM35WpBot8oT2w7Kb",
+    "https://pink-acceptable-heron-641.mypinata.cloud/ipfs/QmdyiSzLVH8kFTeNcEMVxwg7rEtApmH22XyQggUM4rbrpp",
+    "https://pink-acceptable-heron-641.mypinata.cloud/ipfs/QmTKXhSbM4MDkbJDxDyeKok1T4oE9wiBtRkPhrLvMcwkwJ",
+    "https://pink-acceptable-heron-641.mypinata.cloud/ipfs/QmP57cHwtc6NuMGWhnPzMckUtSA74mVpbAkZ9Z5reKwhA4",
+    "https://pink-acceptable-heron-641.mypinata.cloud/ipfs/QmQTQpTKs3LKgVznxpGfgKQAvS2ZQzkRsPKW2rcDUZffVL",
+    "https://pink-acceptable-heron-641.mypinata.cloud/ipfs/QmZM2YdW8hiuq2QbtEzZsioApCfsVmHqXNvzzGuWakWpPx",
+    "https://pink-acceptable-heron-641.mypinata.cloud/ipfs/QmNzUFUcPiYT2bF1tAEfVXJ7iuTwzkw8Av3sGreuH2jywX",
+    "https://pink-acceptable-heron-641.mypinata.cloud/ipfs/QmZkQqLKoMqLEMRwH1dNEqm6HzpU9STHz5YghYNSRqXdbP",
+    "https://pink-acceptable-heron-641.mypinata.cloud/ipfs/QmS8WPpAi8voZ2F5HULojjpjDcVhkZS9nfjswaG2WSqb1X",
+    "https://pink-acceptable-heron-641.mypinata.cloud/ipfs/QmeHq9uX38cVzYbwua3a63gNa1u6nsfMzXP6L3EhxnuKKg"
+
+]
+
+const imagesChallahBread = [
+  "https://pink-acceptable-heron-641.mypinata.cloud/ipfs/QmWUFNZVaDTP33RcZXdzvUsydCvLs9gBDeaNZUNgAPor8s",
+  "https://pink-acceptable-heron-641.mypinata.cloud/ipfs/QmNnMgjYrGS4rgwNUdNHBXNWGWisiHSchLQB24pwiMysjY",
+  "https://pink-acceptable-heron-641.mypinata.cloud/ipfs/QmPQ8UE337cgLUoGQpEtrMLtNMLdu9maZzTBTSLaim5sa1",
+  "https://pink-acceptable-heron-641.mypinata.cloud/ipfs/QmQreinqrxQ2pv7rcZ2ZziLPiAvB91mV6yQ4qL8eKFKBV5",
+  "https://pink-acceptable-heron-641.mypinata.cloud/ipfs/QmXiiFvqZUWuN5feASQMev44eWSkQiiYA5bXBdMfJNzGEn",
+  "https://pink-acceptable-heron-641.mypinata.cloud/ipfs/QmP6sskfHPhBr5mdmXuC6kWrsNyuC62V62SPjyGqP8451D",
+  "https://pink-acceptable-heron-641.mypinata.cloud/ipfs/QmTjiQVhWJvFCb8MimFFqHX2qq4Lsi3EjgDA2HkwTsw6cM",
+  "https://pink-acceptable-heron-641.mypinata.cloud/ipfs/Qme65TevmF1MieQLzUHmTnf6V3fNvDMLinQAF5oU3Z59iD",
+]
+
+const imagesMatzah = [
+  "https://pink-acceptable-heron-641.mypinata.cloud/ipfs/QmYoc2sZ9s8Rzuemw2sXA9U4jm4Q5jjFrxxSn65y7rRB9N",
+  "https://pink-acceptable-heron-641.mypinata.cloud/ipfs/QmbA5JiSAbt24xBHXehWMZcmqirCPWuaubLGrbjnioFJxP",
+  "https://pink-acceptable-heron-641.mypinata.cloud/ipfs/QmYckXn8wZo9gwEjMRxUCUWp8aXNWYkFbBkE6GVvyS74vu",
+  "https://pink-acceptable-heron-641.mypinata.cloud/ipfs/QmQ8TpyJUX3GTDXMW4puA5aBHrctrba6cgFvLx3WTxR3jL",
+  "https://pink-acceptable-heron-641.mypinata.cloud/ipfs/QmTX5g4QK1NYhrQucmNV9oE72w5Aa9LdpoNA81AjrPb9xV",
+  "https://pink-acceptable-heron-641.mypinata.cloud/ipfs/QmeJwPBWhUUnu78tsXQqXYGWVcbr8YJsPAqctn7rayusuo",
+  "https://pink-acceptable-heron-641.mypinata.cloud/ipfs/Qmd7asG6oAPDiwMpbahBV8FbFS8WfuSchBDADcrSVEZcX8",
+
+]
+
+const imagesYarmulke = [
+  "https://pink-acceptable-heron-641.mypinata.cloud/ipfs/QmNgpisdxgkzmBQCjyZug5JYw1DifhRDSKr9khicDyifVa",
+  "https://pink-acceptable-heron-641.mypinata.cloud/ipfs/QmSMNFkEtqJhuZ14WVy9p6HZQNt3FRcN8LYMLJcHuuNymk",
+  "https://pink-acceptable-heron-641.mypinata.cloud/ipfs/QmTmX52u5r6a1gug4p9kynDoKKSVxcn1MJt7EhidBqEe5W",
+  "https://pink-acceptable-heron-641.mypinata.cloud/ipfs/QmbiC2uy1Dvb8yR4j4fkhfkKNEzf3PTYS6uNXLBH9XtCBa",
+  "https://pink-acceptable-heron-641.mypinata.cloud/ipfs/Qma6kzvGfpTjFcXHMrnmihydeiC7QJ8jRAxc6fo2sSo3WL",
+  "https://pink-acceptable-heron-641.mypinata.cloud/ipfs/QmRwrXTH55LeCagNvjGUePmoHXfHuYaHk6B9ExsjvcGRAw",
+  "https://pink-acceptable-heron-641.mypinata.cloud/ipfs/QmZSE6TPvgizQWY5zh12RVb6C8NrQEYcFpzAwZzb4LEixm",
+  "https://pink-acceptable-heron-641.mypinata.cloud/ipfs/QmcqxpE1k2JJQo3zdK1ACT2RVLsRQWCV4Wq7rzFEKkHGLD",
+  "https://pink-acceptable-heron-641.mypinata.cloud/ipfs/QmS7bDCnCAChdNmZ79R68D1XmGDwqbKCxyAHxxNZPohW43"
+
+]
 
   const { data, refetch: shekelBalanceRefetch } = useBalance({
     address: address,
@@ -119,7 +182,7 @@ const Staking = () => {
     useContractRead({
       ...erc20ShekelContractConfig,
       functionName: "allowance",
-      args: [address, addressContract.addressNFT],
+      args: [address, addressContract.addressJewCollection],
     });
 
   //=============Approve shekel token===========
@@ -131,7 +194,7 @@ const Staking = () => {
     ...erc20ShekelContractConfig,
     functionName: "approve",
     args: [
-      addressContract.addressNFT,
+      addressContract.addressJewCollection,
       web3.utils.toNumber(web3.utils.toWei(shekelAmountForBuy, "ether")),
     ],
   });
@@ -252,35 +315,35 @@ const Staking = () => {
   // });
 
   //=============Buy NFT===========
-  const {
-    config: buyNFTConfig,
-    // error: buyNFTConfigError,
-    // isError: isBuyNFTConfigError,
-  } = usePrepareContractWrite({
-    ...contractConfig,
-    functionName: "buyNFT",
-    args: [web3.utils.toNumber(web3.utils.toWei(shekelAmountForBuy, "ether"))],
-  });
+  // const {
+  //   config: buyNFTConfig,
+  //   // error: buyNFTConfigError,
+  //   // isError: isBuyNFTConfigError,
+  // } = usePrepareContractWrite({
+  //   ...contractConfig,
+  //   functionName: "buyNFT",
+  //   args: [web3.utils.toNumber(web3.utils.toWei(shekelAmountForBuy, "ether"))],
+  // });
 
-  const {
-    data: buyNFTConfigData,
-    write: buyNFT,
-    // error: BuyNFTConfigError,
-    isLoading: BuyNFTLoading,
-    isSuccess: BuyNFTSuccess,
-    isError: BuyNFTError,
-  } = useContractWrite(buyNFTConfig);
+  // const {
+  //   data: buyNFTConfigData,
+  //   write: buyNFT,
+  //   // error: BuyNFTConfigError,
+  //   isLoading: BuyNFTLoading,
+  //   isSuccess: BuyNFTSuccess,
+  //   isError: BuyNFTError,
+  // } = useContractWrite(buyNFTConfig);
 
-  const waitForBuyNFTApproveTransaction = useWaitForTransaction({
-    hash: buyNFTConfigData?.hash,
-    onSuccess(data) {
-      setChangeFlag(true);
-      setBuyNFTLoadingIcon(false);
-      toast.success("Purchase Successfull", {
-        autoClose: 5000,
-      });
-    },
-  });
+  // const waitForBuyNFTApproveTransaction = useWaitForTransaction({
+  //   hash: buyNFTConfigData?.hash,
+  //   onSuccess(data) {
+  //     setChangeFlag(true);
+  //     setBuyNFTLoadingIcon(false);
+  //     toast.success("Purchase Successfull", {
+  //       autoClose: 5000,
+  //     });
+  //   },
+  // });
 
   const onApproveJew = async () => {
     if (isConnected === true) {
@@ -413,10 +476,151 @@ const Staking = () => {
     }
   };
 
+  const BuyNFTTx = async(url) => {
+      try{
+        // await buyNFT();
+        
+        const BuyNft = await writeContract({
+          address: addressContract.addressJewCollection,
+          abi: JewCollection,
+          functionName: "buyNFT",
+          args: [web3.utils.toNumber(web3.utils.toWei(shekelAmountForBuy, "ether")),url],
+          
+        })
+        console.log('aaa',BuyNft)
+        const tx = await waitForTransaction({hash: BuyNft.hash});
+        if(tx){
+          setChangeFlag(true);
+          setBuyNFTLoadingIcon(false);
+          toast.success("Purchase Successfull", {
+            autoClose: 5000,
+          });
+        }
+
+    }catch(e){
+      setStakeLoadingIcon(false);
+      setBuyNFTLoadingIcon(false);
+      console.log(e);
+      toast.error("Your transaction is failed!", { autoClose: 5000 });
+    }
+  }
+
+  function getRandomImageIndex(images) {
+    const index = Math.floor(Math.random() * images.length);
+    return images[index];
+  }
+
+  async function pinMetadataToIPFS(metadata) {
+    const options = {
+        method: 'POST',
+        headers: {
+            Authorization: `Bearer ${process.env.REACT_APP_PINATA_KEY}`,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            pinataContent: metadata
+        })
+    };
+
+    let tokenUrl;
+    try {
+        const response = await fetch('https://api.pinata.cloud/pinning/pinJSONToIPFS', options);
+        const responseData = await response.json();
+        console.log(responseData);
+        const ipfsHash = responseData.IpfsHash;
+        tokenUrl = `https://pink-acceptable-heron-641.mypinata.cloud/ipfs/${ipfsHash}`;
+    } catch (err) {
+        console.error(err);
+        setStakeLoadingIcon(false);
+        setBuyNFTLoadingIcon(false);
+        toast.error("Your transaction is failed!", { autoClose: 5000 });
+    }
+    return tokenUrl;
+}
+
+
+
   const onBuyNFT = async () => {
     if (isConnected === true) {
-      await buyNFT();
+
       setBuyNFTLoadingIcon(true);
+
+      if(shekelAmountForBuy === 200){
+        await BuyNFTTx("https://pink-acceptable-heron-641.mypinata.cloud/ipfs/QmcgjQFykm5tnXm1Wc92yJmVz3Mt4PJt5tkMQHriyk9QK5");
+
+      }
+      else if (shekelAmountForBuy === 350) {
+        await BuyNFTTx("https://pink-acceptable-heron-641.mypinata.cloud/ipfs/QmfBcJBdEvC4Qu1LR7t9LxAvbvNWgGZ2PvwrW5soQsmQSr");
+
+      }
+      else if (shekelAmountForBuy === 250000) {
+        await BuyNFTTx("https://pink-acceptable-heron-641.mypinata.cloud/ipfs/QmaEWg8Eo27PZDveZnXbnhtq8EjTKuPx2uXjWFFwi3QMGq")
+
+      }
+      else if (shekelAmountForBuy === 150) {
+        const imageurl = getRandomImageIndex(imagesMenorah);
+        const metadata = {
+            name: "Menorah",
+            description: "A Menorah is a traditional Jewish candelabrum that holds a central significance in the celebration of Hanukkah, also known as the Festival of Lights. During each night of Hanukkah, an additional candle is lit, starting with one on the first night and progressing to eight on the final night. The lighting of the candles commemorates the miracle of the oil that burned for eight days in the ancient Temple in Jerusalem, even though there was only enough oil for one day.",
+            image: imageurl
+        }
+        const tokenurl = await pinMetadataToIPFS(metadata);
+        console.log("final url",tokenurl);
+        await BuyNFTTx(tokenurl);
+
+      }
+      else if (shekelAmountForBuy === 100) {
+        const imageurl = getRandomImageIndex(imagesKiddish);
+        const metadata = {
+            name: "Kiddish Cup",
+            description: "A Kiddush cup is a ceremonial goblet used in Jewish religious rituals, particularly during the blessing over wine or grape juice. The term (Kiddush) refers to the sanctification or blessing recited on Shabbat (the Jewish Sabbath) and other Jewish holidays, marking the separation between the ordinary and the holy. During the Kiddush ceremony, the cup is filled with wine or grape juice, and the blessing is recited to sanctify the Sabbath or holiday. The head of the household or a designated individual then sips from the Kiddush cup, and often the contents are shared with others at the table.",
+            image: imageurl
+        }
+
+        const tokenurl = await pinMetadataToIPFS(metadata);
+        console.log("final url",tokenurl);
+        await BuyNFTTx(tokenurl);
+
+      } else if (shekelAmountForBuy === 75) {
+        const imageurl = getRandomImageIndex(imagesChallahBread);
+        const metadata = {
+            name: "Challah Bread",
+            description: "Challah is a traditional Jewish bread that is typically eaten on the Sabbath and during Jewish holidays. It is a rich, sweet, and slightly eggy bread that holds cultural and religious significance in Jewish tradition. The braided shape of Challah is said to represent unity, love, and the intertwining of the Jewish people. Additionally, the sweetness of the bread symbolizes the sweetness of the Sabbath and other joyous occasions.",
+            image: imageurl
+        }
+
+        const tokenurl = await pinMetadataToIPFS(metadata);
+        console.log("final url",tokenurl);
+        await BuyNFTTx(tokenurl);
+      } else if (shekelAmountForBuy === 60) {
+        
+        const imageurl = getRandomImageIndex(imagesMatzah);
+        const metadata = {
+            name: "Matzah",
+            description: "Matzah is unleavened flatbread that holds great significance in Jewish tradition, particularly during the festival of Passover (Pesach). Matzah is a central element of the Passover Seder, symbolizing the haste with which the Israelites left Egypt during the Exodus, as they did not have time for their bread to rise. Matzah is not only a symbol of historical events but also serves as a reminder of the Jewish people's journey from slavery to freedom. During Passover, it is a central element in the dietary observance of refraining from leavened products.",
+            image: imageurl
+        }
+
+        const tokenurl = await pinMetadataToIPFS(metadata);
+        console.log("final url",tokenurl);
+        await BuyNFTTx(tokenurl);
+
+      } else if (shekelAmountForBuy === 50) {
+
+        const imageurl = getRandomImageIndex(imagesYarmulke);
+        const metadata = {
+            name: "Yarmulke",
+            description: "A yarmulke, also known as a kippah, is a small, round skullcap worn by Jewish men as a symbol of their religious faith and reverence for God. It is typically worn during prayer or other religious ceremonies, and it signifies a sense of humility and acknowledgment of a higher power. In some Jewish traditions, wearing a yarmulke is a customary practice, while in others, it may be reserved for specific occasions or locations, such as a synagogue or during religious rituals. The style and size of yarmulkes can vary, but they are generally small and worn at the top of the head.",
+            image: imageurl
+        }
+
+        const tokenurl = await pinMetadataToIPFS(metadata);
+        console.log("final url",tokenurl);
+        await BuyNFTTx(tokenurl);
+
+      }
+     
+     
     } else {
       toast.warn(
         "Your wallet is disconnected!After disconnect, plz connect again!",
@@ -424,6 +628,7 @@ const Staking = () => {
       );
     }
   };
+
 
   useEffect(() => {
     const GetReward = async () => {
@@ -566,7 +771,6 @@ const Staking = () => {
     isClaimRefetch();
     allownceJewAmountRefetch();
     allownceShekelAmountRefetch();
-
     console.log("bal>>>>",isStakedStatues);
 
   }, []);
@@ -574,8 +778,7 @@ const Staking = () => {
   useEffect(() => {
     if (
       ApprovedJewError === true ||
-      ApproveShekelError === true ||
-      BuyNFTError === true
+      ApproveShekelError === true 
     ) {
       setStakeLoadingIcon(false);
       setBuyNFTLoadingIcon(false);
@@ -583,8 +786,7 @@ const Staking = () => {
     }
   }, [
     ApprovedJewError,
-    ApproveShekelError,
-    BuyNFTError,
+    ApproveShekelError
   ]);
 
   useEffect(() => {
@@ -611,6 +813,14 @@ const Staking = () => {
       return () => clearInterval(interval);
     }
   }, [isConnected,isStakedStatues]);
+
+  useEffect(()=> {
+    isStakedStatuesRefetch();
+    shekelBalanceRefetch();
+    isClaimRefetch();
+    allownceJewAmountRefetch();
+    allownceShekelAmountRefetch();
+  },[reward])
 
 
   return (
