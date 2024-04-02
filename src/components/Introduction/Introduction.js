@@ -427,7 +427,7 @@ const Introduction = () => {
           // style={{ color: "rgba(255, 255, 255, 0.50)" }}
         >
           Have you ever told yourself that you would have helped the Jews escape
-          the Holocaust? On March 29th to Now, you'll have the chance to prove it.
+          the Holocaust? Now, you'll have the chance to prove it.
         </div>
         <div
           className="w-full py-[18px] sm:pl-[24px] sm:pr-[40px] px-[14px] text-[12px] sm:text-[20px] text-[#FFE300] font-bold rounded-[10px] bg-[#010813]"
