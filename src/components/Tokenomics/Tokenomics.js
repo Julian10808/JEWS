@@ -39,8 +39,7 @@ const Tokenomics = () => {
           <br />
           <br />
           <p>
-            Jewcoins starting price is .15 usd. After 1 million Jewcoins are
-            saved from Auchwallet, we will open up a liquidity pool using the
+            Jewcoins starting price is .15 usd. On April 20, we will open up a liquidity pool using the
             Eth and stable coins acquired. From this point onwards, the price of
             Jewcoin will be determined by incoming purchases and sales. We will
             keep the Jewcoin price in Auchwallet 1% less than the price in the
