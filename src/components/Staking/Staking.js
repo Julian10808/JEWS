@@ -476,6 +476,46 @@ const imagesYarmulke = [
     }
   };
 
+  const GetTokenId = async() => {
+    if (isConnected === true) {
+      try{  
+        const TokenId = await readContract({
+          address: addressContract.addressJewCollection,
+          abi: JewCollection,
+          functionName: "getTokenIdsOfAddress",
+          args: [address],
+          
+        })
+        const lastTokenId = TokenId[TokenId.length - 1];
+        console.log('Last token ID:', lastTokenId.toString());
+        toast.success(`Token ID of minted NFT is ${lastTokenId.toString()} `,  { autoClose: 60000 })
+        // console.log("id>>>>>>>",TokenId.pop());
+
+        // const tx = await waitForTransaction({hash: TokenId.hash});
+        // if(tx){
+         
+        //   // setChangeFlag(true);
+        //   // setStakeLoadingIcon(false);
+        //   // toast.success("You unstaked the jewcoin successfully!", {
+        //   //   autoClose: 5000,
+        //   // });
+        
+        // }
+      }catch(e){
+        // setStakeLoadingIcon(false);
+        // setBuyNFTLoadingIcon(false);
+        //toast.error("Your transaction is failed!", { autoClose: 5000 });
+        console.error(e.message);
+      }
+    }else {
+      toast.warn(
+        "Your wallet is disconnected!After disconnect, plz connect again!",
+        { autoClose: 5000 }
+      );
+    }
+  }
+
+
   const BuyNFTTx = async(url) => {
       try{
         // await buyNFT();
@@ -548,6 +588,7 @@ const imagesYarmulke = [
       if(shekelAmountForBuy === 200){
         await BuyNFTTx("https://pink-acceptable-heron-641.mypinata.cloud/ipfs/QmcgjQFykm5tnXm1Wc92yJmVz3Mt4PJt5tkMQHriyk9QK5");
 
+
       }
       else if (shekelAmountForBuy === 350) {
         await BuyNFTTx("https://pink-acceptable-heron-641.mypinata.cloud/ipfs/QmfBcJBdEvC4Qu1LR7t9LxAvbvNWgGZ2PvwrW5soQsmQSr");
@@ -619,6 +660,7 @@ const imagesYarmulke = [
         await BuyNFTTx(tokenurl);
 
       }
+      await GetTokenId();
      
      
     } else {

@@ -14,6 +14,7 @@ import {
 import { toast } from "react-toastify";
 import addressContract from "../../contracts/contractAddress.json";
 import JEWNFT from "../../contracts/abi/JEWNFT.json";
+import { readContract,waitForTransaction,writeContract } from '@wagmi/core'
 
 const Airdrop = () => {
   const { address, connector, isConnected } = useAccount();
@@ -45,39 +46,60 @@ const Airdrop = () => {
 
   console.log(claiamble, "isClaimableSkin");
   //=============buy stable token===========
-  const {
-    config: claimSkinConfig,
-    // error: claimSkinConfigError,
-    // isError: isClaimSkinConfigError,
-  } = usePrepareContractWrite({
-    ...contractConfig,
-    functionName: "claimSkin",
-    args: [],
-  });
+  // const {
+  //   config: claimSkinConfig,
+  //   // error: claimSkinConfigError,
+  //   // isError: isClaimSkinConfigError,
+  // } = usePrepareContractWrite({
+  //   ...contractConfig,
+  //   functionName: "claimSkin",
+  //   args: [],
+  // });
 
-  const {
-    data: claimSkinConfigData,
-    write: claimSkin,
-    // error: ClaimSkinConfigError,
-    isLoading: ClaimSkinLoading,
-    isSuccess: ClaimSkinSuccess,
-    isError: ClaimSkinError,
-  } = useContractWrite(claimSkinConfig);
+  // const {
+  //   data: claimSkinConfigData,
+  //   write: claimSkin,
+  //   // error: ClaimSkinConfigError,
+  //   isLoading: ClaimSkinLoading,
+  //   isSuccess: ClaimSkinSuccess,
+  //   isError: ClaimSkinError,
+  // } = useContractWrite(claimSkinConfig);
 
-  const waitForClaimSkinTransaction = useWaitForTransaction({
-    hash: claimSkinConfigData?.hash,
-    onSuccess(data) {
-      setChangeFlag(true);
-      toast.success("You claimed foreskin token!", { autoClose: 5000 });
-      setProgress(false);
-      setClaimed(true);
-    },
-  });
+  // const waitForClaimSkinTransaction = useWaitForTransaction({
+  //   hash: claimSkinConfigData?.hash,
+  //   onSuccess(data) {
+  //     setChangeFlag(true);
+  //     toast.success("You claimed foreskin token!", { autoClose: 5000 });
+  //     setProgress(false);
+  //     setClaimed(true);
+  //   },
+  // });
 
   const onClaimSkin = async () => {
     if (isConnected === true) {
-      await claimSkin();
+      //await claimSkin();
       setProgress(true);
+      try{  
+        const claimSkin = await writeContract({
+          address: addressContract.addressNFT,
+          abi: JEWNFT,
+          functionName: "claimSkin",
+          args: [],
+          
+        })
+        console.log('aaa',claimSkin)
+        const tx = await waitForTransaction({hash: claimSkin.hash});
+        if(tx){
+          setChangeFlag(true);
+          toast.success("You claimed foreskin token!", { autoClose: 5000 });
+          setProgress(false);
+          setClaimed(true);
+        
+        }
+      }catch(e){
+        setProgress(false);
+        toast.error("Your progress is failed!", { autoClose: 5000 });
+      }
     } else {
       toast.warn(
         "Your wallet is disconnected!After disconnect, plz connect again!",
@@ -188,12 +210,6 @@ const Airdrop = () => {
     // Clear the interval when the component unmounts
   }, [curr]);
 
-  useEffect(() => {
-    if (ClaimSkinError === true) {
-      setProgress(false);
-      toast.error("Your progress is failed!", { autoClose: 5000 });
-    }
-  }, [ClaimSkinError]);
 
   useEffect(() => {
     isClaimableSkinRefetch();

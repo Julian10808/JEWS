@@ -434,6 +434,7 @@ const Introduction = () => {
           style={{
             border: "2px solid #FFE300",
             boxShadow: "4px 3px 13px 0px #FFE300",
+            textAlign: "center",
           }}
         >
           {" "}
@@ -446,16 +447,21 @@ const Introduction = () => {
           condemn the Jewcoins to fiery destruction. Save and stake them to
           start earning rewards.{" "}
         </div>
+        
         <div
-          className="w-full py-[18px] sm:pl-[24px] sm:pr-[40px] px-[14px] text-[12px] sm:text-[20px] text-[#FFE300] font-bold rounded-[10px] bg-[#010813]"
-          style={{
-            border: "2px solid #FFE300",
-            boxShadow: "4px 3px 13px 0px #FFE300",
-          }}
-        >
-          {" "}
-          Buy Jewcoin now on the Ethereum Layer 2, Base. Click Connect Wallet to add the Base network to your Web Wallet. Then, bridge your Ethereum to Base easily and cheaply by clicking here. (<a href="https://bridge.base.org/deposit" className=" text-red-800" target="_blank" rel="noopener noreferrer">Bridge.Base</a>).{" "}
-        </div>
+        className="w-full py-[18px] sm:pl-[24px] sm:pr-[40px] px-[14px] text-[12px] sm:text-[20px] text-[#FFE300] font-bold rounded-[10px] bg-[#010813]"
+        style={{
+          border: "2px solid #FFFFFF", 
+          boxShadow: "4px 3px 13px 0px #FFFFFF", 
+          textAlign: "center",
+        }}
+      >
+        Buy Jewcoin now on the Ethereum Layer 2, Base. Click Connect Wallet to add the Base network to your Web Wallet. Then, bridge your Ethereum to Base easily and cheaply by clicking here. 
+        <br /> {/* New line */}
+        <a href="https://bridge.base.org/deposit" className="text-white " target="_blank" rel="noopener noreferrer">Bridge.Base</a>
+        <br /> {/* New line */}
+        If you want to withdraw your eth from base back to main net we recommend you use a different bridge as this bridge has a 7 day withdrawal period.
+      </div>
 
       </div>
       <div className={s.rightWrapper}>
