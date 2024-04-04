@@ -4,11 +4,8 @@
       {
         "name": "ETH",
         "address": "0x6b175474e89094c44da98b954eedeac495271d0f"
-      },
-      {
-        "name": "USDC",
-        "address": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913"
       }
+     
     ]
     
   }
