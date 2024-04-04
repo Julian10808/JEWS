@@ -53,9 +53,9 @@ const Introduction = () => {
   const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
   const [tokenAmount, setTokenAmount] = useState("");
   const [tokenPrice, setTokenPrice] = useState(0.15);
-  const [selectedCrypto, setSelectedCrypto] = useState("USDC");
+  const [selectedCrypto, setSelectedCrypto] = useState("ETH");
   const [selectedCryptoAddress, setSelectedCryptoAddress] = useState(
-    "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913"
+    "0x6b175474e89094c44da98b954eedeac495271d0f"
   );
   const [neededUSD, setNeededUSD] = useState(0);
   const [lastInputChangeTime, setLastInputChangeTime] = useState(0);
