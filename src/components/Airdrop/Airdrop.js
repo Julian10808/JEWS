@@ -45,6 +45,7 @@ const Airdrop = () => {
   });
 
   console.log(claiamble, "isClaimableSkin");
+  console.log("aadd",address);
   //=============buy stable token===========
   // const {
   //   config: claimSkinConfig,

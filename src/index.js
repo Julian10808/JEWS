@@ -11,7 +11,7 @@ import {
   midnightTheme,
 } from "@rainbow-me/rainbowkit";
 import { configureChains, createConfig, WagmiConfig } from "wagmi";
-import { mainnet, sepolia } from "wagmi/chains";
+import {base } from "wagmi/chains";
 // import { alchemyProvider } from "wagmi/providers/alchemy";
 import { publicProvider } from "wagmi/providers/public";
 import { infuraProvider } from "wagmi/providers/infura";
@@ -22,10 +22,10 @@ import "@rainbow-me/rainbowkit/styles.css";
 // import { infuraProvider } from "@wagmi/core/providers/infura";
 
 const { chains, publicClient, webSocketPublicClient } = configureChains(
-  [sepolia],
+  [base],
   [
-    infuraProvider({ apiKey: "6ed11913153a4847abaec3a4df8a42b5" }),
-    // publicProvider(),
+    // infuraProvider({ apiKey: "6ed11913153a4847abaec3a4df8a42b5" }),
+     publicProvider(),
   ]
   // [
   //   // alchemyProvider({ apiKey: 'ZbcJUctTzRg0qySTHx0jmolpmxP-5V3g' }),
