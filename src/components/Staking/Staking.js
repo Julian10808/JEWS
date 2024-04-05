@@ -25,6 +25,7 @@ const Staking = () => {
   const [buyNFTLoadingIcon, setBuyNFTLoadingIcon] = useState(false);
 
   const [flag, setChangeFlag] = useState(false);
+  const [copied, setCopied] = useState(false);
   const [curr, setCurr] = useState(0);
   const [name, setName] = useState("Yarmulke");
   const [balanceShekel, setBalanceShekel] = useState(0);
@@ -474,6 +475,18 @@ const imagesYarmulke = [
         { autoClose: 5000 }
       );
     }
+  };
+
+  const copyAddressToClipboardShekel = () => {
+    navigator.clipboard.writeText("0xCAC9799a561dA1EbDD8E756743c79F0557bea044");
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1000); // Reset copied state after 2 seconds
+  };
+
+  const copyAddressToClipboardNFT = () => {
+    navigator.clipboard.writeText("0xBe5b68155E47bA9033b32eC10123eFdc4A842A68");
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1000); // Reset copied state after 2 seconds
   };
 
   const GetTokenId = async() => {
@@ -1176,10 +1189,12 @@ const imagesYarmulke = [
             textAlign: "center",
           }}
         >
-        
-          SHEKEL CA  0xCAC9799a561dA1EbDD8E756743c79F0557bea044
-          
-          JEW NFT CA  0xBe5b68155E47bA9033b32eC10123eFdc4A842A68
+          <span> SHEKEL CA  </span>
+          <span className=" cursor-pointer text-[8px] sm:text-[15px]" onClick={copyAddressToClipboardShekel}> 0xCAC9799a561dA1EbDD8E756743c79F0557bea044 </span> <br/>
+          <span> JEW NFT CA  </span>
+          <span className="text-[8px] sm:text-[15px] cursor-pointer " onClick={copyAddressToClipboardNFT}> 0xBe5b68155E47bA9033b32eC10123eFdc4A842A68 </span> <br/>
+          {copied && <span className="text-sm text-gray-400">Address copied!</span>}
+
         </div>
 
 

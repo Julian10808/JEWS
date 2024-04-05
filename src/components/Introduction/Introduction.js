@@ -61,6 +61,7 @@ const Introduction = () => {
   const [lastInputChangeTime, setLastInputChangeTime] = useState(0);
   const [timeoutId, setTimeoutId] = useState(null);
   const [balanceJew, setBalanceJew] = useState(0);
+  const [copied, setCopied] = useState(false);
 
   const { address, connector, isConnected } = useAccount();
   const { data: balJewData, refetch: jewcoinBalanceRefetch } = useBalance({
@@ -264,6 +265,12 @@ const Introduction = () => {
       );
       setProgress(false);
     }
+  };
+
+  const copyAddressToClipboard = () => {
+    navigator.clipboard.writeText("0xc422902E15759f1d19A4F999E2309f8c81df62Bb");
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1000); // Reset copied state after 2 seconds
   };
 
   const approveStable = async () => {
@@ -491,9 +498,13 @@ const Introduction = () => {
           }}
         >
           {" "}
-          JEW CA  0xc422902E15759f1d19A4F999E2309f8c81df62Bb
+          <span> JEW CA </span> 
+          <span onClick={copyAddressToClipboard} className=" cursor-pointer text-[8px] sm:text-[15px]"> 0xc422902E15759f1d19A4F999E2309f8c81df62Bb </span> <br/>
+          {copied && <span className="text-sm text-gray-400">Address copied!</span>}
+          
          {" "}
         </div>
+        
         <div
           className={s.buyBox}
           style={{

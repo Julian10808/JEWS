@@ -29,6 +29,8 @@ const Airdrop = () => {
   const [balance, setBalance] = useState(100);
   const [stakedPeriod, setStakedPeriod] = useState(0);
   const [stakedAmount, setStakedAmount] = useState(0);
+  const [copied, setCopied] = useState(false);
+  
 
   //=========== Contract Config================
   let contractConfig = {};
@@ -197,6 +199,12 @@ const Airdrop = () => {
     }
   };
 
+  const copyAddressToClipboard = () => {
+    navigator.clipboard.writeText("0x27915C1489E63F391025A1C6DD8F9F55C240cB09");
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1000); // Reset copied state after 2 seconds
+  };
+
   const onDateChangeHandler = (e) => {
     const inputValue = e.target.value;
     if (/^\d*$/.test(inputValue)) {
@@ -269,7 +277,8 @@ const Airdrop = () => {
             style={{ boxShadow: "0px 4px 10px 0px rgba(0, 0, 0, 0.25)", textAlign: "center" }}
           >
             <span>Skin CA </span>
-            <span>0x27915C1489E63F391025A1C6DD8F9F55C240cB09</span>
+            <span onClick={copyAddressToClipboard} className=" cursor-pointer text-[8px] sm:text-[15px]">0x27915C1489E63F391025A1C6DD8F9F55C240cB09</span> 
+            {copied && <span className="text-sm text-gray-400">Address copied!</span>}
         </div>
 
           {claiamble !== undefined && claiamble === true ? (
