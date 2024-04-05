@@ -904,7 +904,7 @@ const imagesYarmulke = [
             staked divided by ten equals the amount of Sheklel yielded.
           </div>
           <br />
-          If you stake 25,000 Jewcoins for seven days, you will earn 175 Shekel.
+          If you stake 25,000 Jewcoins for seven days, you will earn 17,500 Shekel.
           If you stake 666 Jewcoin for six days, it will earn 399.6 Shekel.
           Given that Shekel is inflationary and has no maximum supply, we will
           be decreasing the amount of $SHEKEL earned every month until the
