@@ -263,6 +263,14 @@ const Airdrop = () => {
             the Auchwallet burn has finished. For every 1000 Jewcoin Staked,
             users will be able to claim 1 $SKIN
           </div>
+
+          <div
+            className="relative h-[50%] justify-between flex flex-col w-full rounded-[10px] bg-[#7659AD] mb-[10px] px-[14px] py-[8px] "
+            style={{ boxShadow: "0px 4px 10px 0px rgba(0, 0, 0, 0.25)" }}
+          >
+           Skin CA = 0x27915C1489E63F391025A1C6DD8F9F55C240cB09
+          </div>
+
           {claiamble !== undefined && claiamble === true ? (
             <button
               className="h-[50px] w-full text-[white] text-[24px] font-bold bg-[#7659AD] rounded-[10px] h-[20%]"

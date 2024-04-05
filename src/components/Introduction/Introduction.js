@@ -483,6 +483,18 @@ const Introduction = () => {
           }}
         />
         <div
+          className="w-full py-[18px] sm:pl-[24px] sm:pr-[40px] px-[14px] text-[12px] sm:text-[20px] text-[#FFE300] font-bold rounded-[10px] bg-[#010813]"
+          style={{
+            border: "2px solid #FFE300",
+            boxShadow: "4px 3px 13px 0px #FFE300",
+            textAlign: "center",
+          }}
+        >
+          {" "}
+          JEW CA  0xc422902E15759f1d19A4F999E2309f8c81df62Bb
+         {" "}
+        </div>
+        <div
           className={s.buyBox}
           style={{
             border: "2px solid #FFE300",
