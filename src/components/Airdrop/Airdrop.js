@@ -265,11 +265,12 @@ const Airdrop = () => {
           </div>
 
           <div
-            className="relative h-[50%] justify-between flex flex-col w-full rounded-[10px] bg-[#7659AD] mb-[10px] px-[14px] py-[8px] "
-            style={{ boxShadow: "0px 4px 10px 0px rgba(0, 0, 0, 0.25)" }}
+            className="relative justify-between flex flex-col w-full rounded-[10px] bg-[#7659AD] mb-[10px] px-[14px] py-[8px]"
+            style={{ boxShadow: "0px 4px 10px 0px rgba(0, 0, 0, 0.25)", textAlign: "center" }}
           >
-           Skin CA = 0x27915C1489E63F391025A1C6DD8F9F55C240cB09
-          </div>
+            <span>Skin CA </span>
+            <span>0x27915C1489E63F391025A1C6DD8F9F55C240cB09</span>
+        </div>
 
           {claiamble !== undefined && claiamble === true ? (
             <button
