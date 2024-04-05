@@ -361,9 +361,8 @@ const Introduction = () => {
     setNeededUSD(
       (
         (amount * tokenPrice) /
-          price["Realtime Currency Exchange Rate"]["5. Exchange Rate"] +
-        0.0001
-      ).toFixed(4)
+          price["Realtime Currency Exchange Rate"]["5. Exchange Rate"] 
+      ).toFixed(6)
     );
   };
 
