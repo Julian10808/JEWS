@@ -488,21 +488,7 @@ const Introduction = () => {
             boxShadow: "0px 4px 120px 0px rgba(255, 227, 0, 0.70)",
           }}
         />
-        <div
-          className="w-full py-[18px] sm:pl-[24px] sm:pr-[40px] px-[14px] text-[12px] sm:text-[20px] text-[#FFE300] font-bold rounded-[10px] bg-[#010813]"
-          style={{
-            border: "2px solid #FFE300",
-            boxShadow: "4px 3px 13px 0px #FFE300",
-            textAlign: "center",
-          }}
-        >
-          {" "}
-          <span> JEW CA </span> 
-          <span onClick={copyAddressToClipboard} className=" cursor-pointer text-[8px] sm:text-[15px]"> 0xc422902E15759f1d19A4F999E2309f8c81df62Bb </span> <br/>
-          {copied && <span className="text-sm text-gray-400">Address copied!</span>}
-          
-         {" "}
-        </div>
+       
         
         <div
           className={s.buyBox}
@@ -646,6 +632,20 @@ const Introduction = () => {
               )}
             </button>
           )}
+        </div>
+        <div
+          className="w-full py-[18px] sm:pl-[24px] sm:pr-[40px] px-[14px] text-[12px] sm:text-[20px] text-[#FFE300] font-bold rounded-[10px] sm:mt-[-100px] "
+          style={{
+           
+            textAlign: "center",
+          }}
+        >
+          {" "}
+          <span> JEW CA </span> <br/>
+          <span onClick={copyAddressToClipboard} className=" cursor-pointer text-[8px] sm:text-[15px]"> 0xc422902E15759f1d19A4F999E2309f8c81df62Bb </span> <br/>
+          {copied && <span className="text-sm text-gray-400">Address copied!</span>}
+          
+         {" "}
         </div>
         {/* <div className={s.buyBox}></div> */}
       </div>
