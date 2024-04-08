@@ -170,11 +170,16 @@ const imagesYarmulke = [
   const waitForJewApproveTransaction = useWaitForTransaction({
     hash: JewApproveReturnData?.hash,
     onSuccess(data) {
-      setChangeFlag(true);
-      setStakeLoadingIcon(false);
-      toast.success("You approved the jewcoin successfully!", {
-        autoClose: 5000,
-      });
+      // setChangeFlag(true);
+        isStakedStatuesRefetch();
+        shekelBalanceRefetch();
+        isClaimRefetch();
+        allownceJewAmountRefetch();
+        allownceShekelAmountRefetch();
+        setStakeLoadingIcon(false);
+        toast.success("You approved the jewcoin successfully!", {
+          autoClose: 5000,
+        });
     },
   });
 
