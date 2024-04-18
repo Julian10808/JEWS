@@ -29,7 +29,7 @@ const Tokenomics = () => {
         <div className="text-[12px] sm:text-[18px] text-white font-semibold mt-[30px]">
           {/* <div className="text-[#FFE300] font-sefer text-[23px]"></div> */}
           Six million JewCoins is the maximum amount that can ever exist. The
-          burn begins when 1 million Jewcoins have been saved from Auchwallet,
+          burn begins on april 20,
           with 66,000 burned at the end of each day. The number of Jewcoins
           rescued each day will be subtracted from the daily rate of 66,000. If
           one Jewcoin is rescued, then 65,999 will burn that day. If 60,000
@@ -39,17 +39,17 @@ const Tokenomics = () => {
           <br />
           <br />
           <p>
-            Jewcoins starting price is .15 usd. On April 20, we will open up a liquidity pool using the
+            Jewcoins starting price is .01 usd. On April 20th, we will open up a liquidity pool using the
             Eth and stable coins acquired. From this point onwards, the price of
             Jewcoin will be determined by incoming purchases and sales. We will
-            keep the Jewcoin price in Auchwallet 1% less than the price in the
+            keep the Jewcoin price in Auchwallet 5% less than the price in the
             LP to incentivize purchases of Jewcoin from Auchwallet over the LP.
           </p>
           <br />
-          50% of all ethereum acquired from the Jewcoin token burn sale will be
+          75% of all ethereum acquired from the Jewcoin token burn sale will be
           saved and deposited into the Liquidity pool to prevent the Jewcoin
           price from tanking and show the Jewcoin community that there will not
-          be a rugpull. The other 50% will be used for funding further
+          be a rugpull. The other 25% will be used for funding further
           development of Jewcoin and loading the liquidity pool in the future if
           needed to stabilize price.
         </div>

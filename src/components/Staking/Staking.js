@@ -900,17 +900,13 @@ const imagesYarmulke = [
           What do Jews do? They make Shekels! After saving them from the burn,
           it's time to watch them work their magic. Stake your Jewcoin to earn
           $SHEKEL, the currency token for the Jewcoin ecosystem. All NFTs and
-          virtual holy land in our metaverse will be purchased with Shekel. You
-          will earn different amounts of Shekel depending on how much Jewcoin
-          you staked and how long you stake it.
+          virtual holy land in our metaverse will be purchased with Shekel. Currently, the amount of Shekel you will earn is 10% of the amount of Jewcoin you have staked per day.
           <div className="text-[#FFE300]">
             <br />
-            The formula follows: The amount of Jewcoins multiplied by time
-            staked divided by ten equals the amount of Sheklel yielded.
+            100 Jewcoin staked for 24 hours earns 10 Shekel. 5000 Jewcoin staked for 48 hours earns 1000 Shekel
           </div>
           <br />
-          If you stake 25,000 Jewcoins for seven days, you will earn 17,500 Shekel.
-          If you stake 666 Jewcoin for six days, it will earn 399.6 Shekel.
+          You can unstake your Jewcoin at any time but if you unstake before 24 hours has elapsed you will not earn any Shekel. The timer resets every 24 hours.
           Given that Shekel is inflationary and has no maximum supply, we will
           be decreasing the amount of $SHEKEL earned every month until the
           staking reward is 10% of the original amount. Once the SHEKEL reward
