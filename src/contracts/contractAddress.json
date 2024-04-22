@@ -4,5 +4,7 @@
     "addressShekel": "0xCAC9799a561dA1EbDD8E756743c79F0557bea044",
     "addressSkin": "0x27915C1489E63F391025A1C6DD8F9F55C240cB09",
     "addressUsdc": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
-    "addressJewCollection": "0xBe5b68155E47bA9033b32eC10123eFdc4A842A68"
+    "addressJewCollection": "0xBe5b68155E47bA9033b32eC10123eFdc4A842A68",
+    "addressQuote" : "0x3d4e44Eb1374240CE5F1B871ab261CD16335B76a",
+    "Intermediary" : "0xB23023c0bfF9Fc36c8489bf3998e9a00D4354764"
   }

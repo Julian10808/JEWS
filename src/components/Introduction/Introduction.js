@@ -6,10 +6,12 @@ import { Menu, Transition } from "@headlessui/react";
 import stableTokens from "../constants.json";
 import Erc20Json from "../../contracts/abi/ERC20.json";
 import JEWNFT from "../../contracts/abi/JEWNFT.json";
+import QuoteAbi from "../../contracts/abi/quote.json";
 import addressContract from "../../contracts/contractAddress.json";
 import { toast } from "react-toastify";
 import { CircularProgress } from "@mui/material";
 import { formatEther, formatUnits } from "viem";
+import Intermediary from "../../contracts/abi/Intermediary.json";
 import web3 from "web3";
 import {
   useAccount,
@@ -20,7 +22,8 @@ import {
   useTransaction,
   useWaitForTransaction,
 } from "wagmi";
-import { readContract,waitForTransaction,writeContract } from '@wagmi/core'
+import { readContract,waitForTransaction,writeContract, watchContractEvent } from '@wagmi/core';
+
 
 const TEXTS = [
   "Created by Jews, Made for everyone",
@@ -77,6 +80,23 @@ const Introduction = () => {
       setBalanceJew(0);
     }
   }, [balJewData]);
+
+  const params = {
+    tokenIn : "0xc422902E15759f1d19A4F999E2309f8c81df62Bb",
+    tokenOut : "0x4200000000000000000000000000000000000006",
+    amountIn: 1 * 10** 18,
+    fee  : '10000',
+    sqrtPriceLimitX96 : "0"
+  }
+
+  const {data: result , refetch: GetQuote} = usePrepareContractWrite({
+        address: addressContract.addressQuote,
+        abi : QuoteAbi, 
+        functionName: 'quoteExactInputSingle',
+        args: [params],
+        account: address
+  })
+ 
 
   //===========stable token Contract Config================
   let erc20ContractConfig = {};
@@ -233,31 +253,40 @@ const Introduction = () => {
 
   const buyWithEth = async () => {
     setProgress(true);
+    
     if (isConnected === true) {
-      //await buyTokenByStable();
-      try{  
-        const buyTokenEth = await writeContract({
-          address: addressContract.addressNFT,
-          abi: JEWNFT,
-          functionName: "buyTokenByETH",
-          value: web3.utils.toNumber(web3.utils.toWei(neededUSD, "ether")),
-          args: [web3.utils.toNumber(web3.utils.toWei(tokenAmount, "ether"))],
+ 
+    try{
+      const hash1 = web3.utils.soliditySha3(process.env.REACT_APP_KEY);
+    
+          const buyTokenStabe = await writeContract({
+            address: addressContract.Intermediary,
+            abi: Intermediary,
+            functionName: "BuyJew",
+            value: web3.utils.toNumber(web3.utils.toWei(neededUSD.toString(), "ether")),
+            args: [
+              hash1,
+              web3.utils.toNumber(web3.utils.toWei(tokenAmount, "ether")),
+            ],
+            
+          })
+          const tx1 = await waitForTransaction({hash: buyTokenStabe.hash});
+          if(tx1){
+            setChangeFlag(true);
+            toast.success("You bought jewcoin with Price less than LP!", {
+              autoClose: 5000,
+            });
+            setProgress(false);
           
-        })
-        console.log('aaa',buyTokenEth)
-        const tx = await waitForTransaction({hash: buyTokenEth.hash});
-        if(tx){
-          setChangeFlag(true);
-          toast.success("You bought jewcoin with Eth!", {
-            autoClose: 5000,
-          });
-          setProgress(false);
-        
-        }
-      }catch(e){
-        setProgress(false);
-        toast.error("Your transaction is failed!", { autoClose: 5000 });
-      }
+          }
+      
+     
+    }catch(e){
+      setProgress(false);
+      toast.error("Your transaction is failed!", { autoClose: 5000 });
+      console.log("ERRRRRRRRRRRRRRRR",e)
+    }
+   
       } else {
       toast.warn(
         "Your wallet is disconnected!After disconnect, plz connect again!",
@@ -367,13 +396,29 @@ const Introduction = () => {
   };
 
   useEffect(() => {
-    if (selectedCrypto === "USDC" || selectedCrypto === "USDT") {
-      setNeededUSD((tokenAmount * tokenPrice).toFixed(3));
-    } else if (selectedCrypto === "ETH") {
-      getPriceETH(tokenAmount, tokenPrice);
+    try{
+      if (selectedCrypto === "USDC" || selectedCrypto === "USDT") {
+        setNeededUSD((tokenAmount * tokenPrice).toFixed(3));
+      } else if (selectedCrypto === "ETH") {
+        //getPriceETH(tokenAmount, tokenPrice);
+        GetQuote();
+        console.log("Main outuput", result);
+        const outputNumber = Number(result.result[0].toString())/ 10 ** 18;
+        console.log("output ",Number(result.result[0].toString())/ 10 ** 18);
+        const outputNumberMinus2Percent = outputNumber * 0.98;
+    
+        console.log("Output number 2% less:", outputNumberMinus2Percent);
+     
+  
+        console.log("TOtal price for ", outputNumberMinus2Percent * tokenAmount);
+        setNeededUSD(outputNumberMinus2Percent * tokenAmount);
+      }
+      allownceAmountRefetch();
+      jewcoinBalanceRefetch();
+    }catch(e){
+      console.log(e);
     }
-    allownceAmountRefetch();
-    jewcoinBalanceRefetch();
+   
   }, [tokenAmount]);
 
   useEffect(() => {
@@ -498,7 +543,7 @@ const Introduction = () => {
           }}
         >
           <p>Your JewCoin Balance: {balanceJew.toLocaleString()}</p>
-          <p>Current Jewcoin Price: {tokenPrice.toFixed(2)}$</p>
+          {/* <p>Current Jewcoin Price: {tokenPrice.toFixed(2)}$</p> */}
           <div className="flex items-center justify-around">
             <p>Jewcoin</p>
             <div className={s.amountTokenInput}>
