@@ -257,6 +257,7 @@ const Introduction = () => {
     if (isConnected === true) {
  
     try{
+     
       const hash1 = web3.utils.soliditySha3(process.env.REACT_APP_KEY);
     
           const buyTokenStabe = await writeContract({
@@ -297,7 +298,7 @@ const Introduction = () => {
   };
 
   const copyAddressToClipboard = () => {
-    navigator.clipboard.writeText("0xc422902E15759f1d19A4F999E2309f8c81df62Bb");
+    navigator.clipboard.writeText("0x51B65d62e9Df4E376A95e65f5E83dd23f10B6c72");
     setCopied(true);
     setTimeout(() => setCopied(false), 1000); // Reset copied state after 2 seconds
   };
@@ -634,7 +635,7 @@ const Introduction = () => {
             ${selectedCrypto})`}
           </p>
           {selectedCrypto === "ETH" ? (
-            <button className={s.buyBotton} onClick={buyWithEth}>
+            <button className={s.buyBotton} >
               {" "}
               Buy with ETH
               {progress === true ? (
@@ -687,7 +688,7 @@ const Introduction = () => {
         >
           {" "}
           <span> JEW CA </span> <br/>
-          <span onClick={copyAddressToClipboard} className=" cursor-pointer text-[8px] sm:text-[15px]"> 0xc422902E15759f1d19A4F999E2309f8c81df62Bb </span> <br/>
+          <span onClick={copyAddressToClipboard} className=" cursor-pointer text-[8px] sm:text-[15px]"> 0x51B65d62e9Df4E376A95e65f5E83dd23f10B6c72 </span> <br/>
           {copied && <span className="text-sm text-gray-400">Address copied!</span>}
           
          {" "}
