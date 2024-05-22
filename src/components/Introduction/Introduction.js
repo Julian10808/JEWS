@@ -298,7 +298,7 @@ const Introduction = () => {
   };
 
   const copyAddressToClipboard = () => {
-    navigator.clipboard.writeText("0x51B65d62e9Df4E376A95e65f5E83dd23f10B6c72");
+    navigator.clipboard.writeText("0x92024DfB2402d455b3bA1F3A90A30b5674Dead65");
     setCopied(true);
     setTimeout(() => setCopied(false), 1000); // Reset copied state after 2 seconds
   };
@@ -688,7 +688,7 @@ const Introduction = () => {
         >
           {" "}
           <span> JEW CA </span> <br/>
-          <span onClick={copyAddressToClipboard} className=" cursor-pointer text-[8px] sm:text-[15px]"> 0x51B65d62e9Df4E376A95e65f5E83dd23f10B6c72 </span> <br/>
+          <span onClick={copyAddressToClipboard} className=" cursor-pointer text-[8px] sm:text-[15px]"> 0x92024DfB2402d455b3bA1F3A90A30b5674Dead65 </span> <br/>
           {copied && <span className="text-sm text-gray-400">Address copied!</span>}
           
          {" "}
