@@ -490,7 +490,7 @@ const Introduction = () => {
           }}
         >
           {" "}
-          6,000,000 Jewcoins are trapped in Auchwallet, with up to 66,000
+          6,000,000 Jewcoins are trapped in Auchwallet, with up to 6000
           Jewcoins scheduled for daily burning. If nobody acts to rescue them,
           they will become digital ash. There will be no additional Jewcoins
           mined, nor any way to revive them once burned. While their situation

@@ -28,8 +28,7 @@ const Tokenomics = () => {
         <SvgStakingRightArrow />
         <div className="text-[12px] sm:text-[18px] text-white font-semibold mt-[30px]">
           {/* <div className="text-[#FFE300] font-sefer text-[23px]"></div> */}
-          Six million JewCoins is the maximum amount that can ever exist. The
-          burn begins on april 20,
+          Six million JewCoins is the maximum amount that can ever exist,
           with 66,000 burned at the end of each day. The number of Jewcoins
           rescued each day will be subtracted from the daily rate of 66,000. If
           one Jewcoin is rescued, then 65,999 will burn that day. If 60,000
@@ -39,7 +38,7 @@ const Tokenomics = () => {
           <br />
           <br />
           <p>
-            Jewcoins starting price is .01 usd. On April 20th, we will open up a liquidity pool using the
+            Jewcoins starting price is .01 usd. We will open up a liquidity pool using the
             Eth and stable coins acquired. From this point onwards, the price of
             Jewcoin will be determined by incoming purchases and sales. We will
             keep the Jewcoin price in Auchwallet 5% less than the price in the
