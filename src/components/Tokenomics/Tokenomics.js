@@ -28,13 +28,7 @@ const Tokenomics = () => {
         <SvgStakingRightArrow />
         <div className="text-[12px] sm:text-[18px] text-white font-semibold mt-[30px]">
           {/* <div className="text-[#FFE300] font-sefer text-[23px]"></div> */}
-          Six million JewCoins is the maximum amount that can ever exist,
-          with 66,000 burned at the end of each day. The number of Jewcoins
-          rescued each day will be subtracted from the daily rate of 66,000. If
-          one Jewcoin is rescued, then 65,999 will burn that day. If 60,000
-          Jewcoins are rescued, only 6,000 will burn that day. More than 66,000
-          Jewcoins saved in a day does not affect the amount burned the
-          following day.
+          Six million JewCoins is the maximum amount that can ever exist, with 6,000 burned at the end of each day. The number of Jewcoins rescued each day will be subtracted from the daily rate. If one Jewcoin is rescued, then 5,999 will burn that day. If 6,000 or more are rescued, none will burn that day. More than 6,000 Jewcoins saved in a day does not affect the amount burned the following day.
           <br />
           <br />
           <p>
