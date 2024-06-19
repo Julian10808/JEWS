@@ -543,141 +543,32 @@ const Introduction = () => {
             boxShadow: "4px 3px 13px 0px #FFE300",
           }}
         >
-          <p>Your JewCoin Balance: {balanceJew.toLocaleString()}</p>
-          {/* <p>Current Jewcoin Price: {tokenPrice.toFixed(2)}$</p> */}
-          <div className="flex items-center justify-around">
-            <p>Jewcoin</p>
-            <div className={s.amountTokenInput}>
-              <input
-                className="outline-none w-full"
-                placeholder="Amount"
-                type="number"
-                value={tokenAmount}
-                onChange={onBuyAmountChangeHandler}
-              />
-            </div>
-            <div className={s.selectedCrypto}>
-              <Menu as="div" className="relative">
-                <div className="h-8">
-                  <Menu.Button className="flex md:inline-flex justify-between items-center  space-x-1 sm:space-x-2 w-full border-Light-Slate-Gray/90 text-Light-Slate-Gray ">
-                    <div className="flex w-[30px] h-[30px]">
-                      <img
-                        src={`/assets/icons/${selectedCrypto}.svg`}
-                        alt={selectedCrypto}
-                      />
-                    </div>
 
-                    <div className={s.arrowIcon}>
-                      <svg
-                        width="27"
-                        height="27"
-                        viewBox="0 0 27 27"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M21.8382 8.11719H5.16159C4.6614 8.11719 4.3821 8.64531 4.69187 9.00586L13.0301 18.6746C13.2688 18.9514 13.7284 18.9514 13.9696 18.6746L22.3079 9.00586C22.6176 8.64531 22.3384 8.11719 21.8382 8.11719Z"
-                          fill="white"
-                        />
-                      </svg>
-                    </div>
-                  </Menu.Button>
-                </div>
 
-                <Transition
-                  as={Fragment}
-                  enter="transition ease-out duration-100"
-                  enterFrom="transform opacity-0 scale-95"
-                  enterTo="transform opacity-100 scale-100"
-                  leave="transition ease-in duration-75"
-                  leaveFrom="transform opacity-100 scale-100"
-                  leaveTo="transform opacity-0 scale-95"
-                >
-                  <Menu.Items
-                    className={`absolute w-full overflow-hidden mt-1 origin-top-right shadow-details bg-Pure-White bottom-14`}
-                  >
-                    <div className="font-medium text-sm text-Light-Slate-Gray bg-white rounded-lg">
-                      {cryptosETH.map(
-                        (crypto, index) =>
-                          crypto.name !== selectedCrypto && (
-                            <Menu.Item
-                              key={crypto.name}
-                              onClick={() => {
-                                setSelectedCrypto(crypto.name);
-                                setSelectedCryptoAddress(crypto.address);
-                              }}
-                              as="div"
-                              className=" cursor-pointer hover:bg-Light-Slate-Gray/5 py-1 flex items-center justify-between space-x-4 border-l-4 border-Pure-White duration-300 hover:border-Chinese-Blue"
-                            >
-                              <img
-                                src={`/assets/icons/${crypto.name}.svg`}
-                                alt={crypto.name}
-                              />
-                            </Menu.Item>
-                          )
-                      )}
-                    </div>
-                  </Menu.Items>
-                </Transition>
-              </Menu>
-            </div>
+          <div style={{ marginBottom: '10px' }}>
+            <strong>Pair Contract Address:</strong>
+            <p style={{ wordBreak: 'break-all', color: '#fff' }}>0x976292732B32D2B3884BbbaDB6f93212ADCD7A54</p>
           </div>
-
-          <p className="text-lg">
-            If you want to buy {tokenAmount} jewcoin, you need {neededUSD}{" "}
-            {selectedCrypto}
-            {selectedCrypto === "ETH"
-              ? ""
-              : `(you approved${" "}
-            ${
-              allownceAmount !== undefined ? formatUnits(allownceAmount, 6) : 0
-            }${" "}
-            ${selectedCrypto})`}
-          </p>
-          {selectedCrypto === "ETH" ? (
-            <button className={s.buyBotton} >
-              {" "}
-              Buy with ETH
-              {progress === true ? (
-                <CircularProgress
-                  className="text-[18px]"
-                  color="inherit"
-                  size={25}
-                />
-              ) : (
-                ""
-              )}
-            </button>
-          ) : allownceAmount >=
-            web3.utils.toNumber(web3.utils.toWei(neededUSD, "mwei")) ? (
-            <button className={s.buyBotton} onClick={buyWithStable}>
-              {" "}
-              Buy with Stable
-              {progress === true ? (
-                <CircularProgress
-                  className="text-[18px]"
-                  color="inherit"
-                  size={25}
-                />
-              ) : (
-                ""
-              )}
-            </button>
-          ) : (
-            <button className={s.buyBotton} onClick={approveStable}>
-              {" "}
-              Approve Jewcoin
-              {progress === true ? (
-                <CircularProgress
-                  className="text-[18px]"
-                  color="inherit"
-                  size={25}
-                />
-              ) : (
-                ""
-              )}
-            </button>
-          )}
+          <div style={{ textAlign: 'center' }}>
+            <a
+              href={"https://dexscreener.com/base/0x976292732b32d2b3884bbbadb6f93212adcd7a54"}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: 'inline-block',
+                padding: '10px 20px',
+                backgroundColor: '#FFE300',
+                color: '#000',
+                textDecoration: 'none',
+                borderRadius: '5px',
+                boxShadow: '2px 2px 10px rgba(0, 0, 0, 0.1)'
+              }}
+            >
+              View on Dexscreener
+            </a>
+          </div>
+          
+          
         </div>
         <div
           className="w-full py-[18px] sm:pl-[24px] sm:pr-[40px] px-[14px] text-[12px] sm:text-[20px] text-[#FFE300] font-bold rounded-[10px] sm:mt-[-100px] "
